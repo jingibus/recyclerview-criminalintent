@@ -107,23 +107,6 @@ public class CrimeListFragment extends BaseFragment {
         getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, menu);
     }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        // TODO: not sure if this will work
-        return super.onContextItemSelected(item);
-//        AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
-//        int position = info.position;
-//        CrimeAdapter adapter = (CrimeAdapter) mRecyclerView.getAdapter();
-//        Crime crime = adapter.getItem(position);
-//
-//        switch (item.getItemId()) {
-//            case R.id.menu_item_delete_crime:
-//                CrimeLab.get(getActivity()).deleteCrime(crime);
-//                adapter.notifyDataSetChanged();
-//                return true;
-//        }
-//        return super.onContextItemSelected(item);
-    }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView mTitleTextView;
@@ -133,13 +116,14 @@ public class CrimeListFragment extends BaseFragment {
 
         public CrimeHolder(View itemView) {
             super(itemView);
+
             mTitleTextView = (TextView) itemView.findViewById(R.id.crime_list_item_titleTextView);
             mDateTextView = (TextView) itemView.findViewById(R.id.crime_list_item_dateTextView);
             mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.crime_list_item_solvedCheckBox);
             itemView.setOnClickListener(this);
         }
 
-        public void setCrime(Crime crime) {
+        public void bindCrime(Crime crime) {
             mCrime = crime;
             mTitleTextView.setText(crime.getTitle());
             mDateTextView.setText(crime.getDate().toString());
@@ -167,7 +151,7 @@ public class CrimeListFragment extends BaseFragment {
         @Override
         public void onBindViewHolder(CrimeHolder holder, int pos) {
             Crime crime = mCrimes.get(pos);
-            holder.setCrime(crime);
+            holder.bindCrime(crime);
         }
 
         @Override
