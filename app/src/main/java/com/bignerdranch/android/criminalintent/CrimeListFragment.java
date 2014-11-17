@@ -4,7 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.view.ActionMode;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -13,19 +13,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView.MultiChoiceModeListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ListView;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class CrimeListFragment extends BaseFragment {
 
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
 
     private ArrayList<Crime> mCrimes;
     private boolean mSubtitleVisible;
@@ -42,77 +38,30 @@ public class CrimeListFragment extends BaseFragment {
     @TargetApi(11)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_list, parent, false);
+        View v = inflater.inflate(R.layout.fragment_recyclerview, parent, false);
 
         if (mSubtitleVisible) {
             getActionBar().setSubtitle(R.string.subtitle);
         }
 
-        mListView = (ListView) v.findViewById(R.id.list);
-        mListView.setOnItemClickListener(mOnItemClickListener);
-
-        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        mListView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
-
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                MenuInflater inflater = mode.getMenuInflater();
-                inflater.inflate(R.menu.crime_list_item_context, menu);
-                return true;
-            }
-
-            public void onItemCheckedStateChanged(ActionMode mode, int position,
-                    long id, boolean checked) {
-            }
-
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_item_delete_crime:
-                        CrimeAdapter adapter = (CrimeAdapter) mListView.getAdapter();
-                        CrimeLab crimeLab = CrimeLab.get(getActivity());
-                        for (int i = adapter.getCount() - 1; i >= 0; i--) {
-                            if (mListView.isItemChecked(i)) {
-                                crimeLab.deleteCrime(adapter.getItem(i));
-                            }
-                        }
-                        mode.finish();
-                        adapter.notifyDataSetChanged();
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            public void onDestroyActionMode(ActionMode mode) {
-
-            }
-        });
-
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mCrimes = CrimeLab.get(getActivity()).getCrimes();
-        CrimeAdapter adapter = new CrimeAdapter(mCrimes);
-        mListView.setAdapter(adapter);
+        mRecyclerView.setAdapter(new CrimeAdapter());
 
         return v;
     }
 
-    private AdapterView.OnItemClickListener mOnItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            // get the Crime from the adapter
-            Crime c = ((CrimeAdapter) mListView.getAdapter()).getItem(position);
-            // start an instance of CrimePagerActivity
-            Intent i = new Intent(getActivity(), CrimePagerActivity.class);
-            i.putExtra(CrimeFragment.EXTRA_CRIME_ID, c.getId());
-            startActivityForResult(i, 0);
-        }
-    };
+    private void selectCrime(Crime c) {
+        // start an instance of CrimePagerActivity
+        Intent i = new Intent(getActivity(), CrimePagerActivity.class);
+        i.putExtra(CrimeFragment.EXTRA_CRIME_ID, c.getId());
+        startActivityForResult(i, 0);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ((CrimeAdapter) mListView.getAdapter()).notifyDataSetChanged();
+        mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -160,47 +109,70 @@ public class CrimeListFragment extends BaseFragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
-        int position = info.position;
-        CrimeAdapter adapter = (CrimeAdapter) mListView.getAdapter();
-        Crime crime = adapter.getItem(position);
-
-        switch (item.getItemId()) {
-            case R.id.menu_item_delete_crime:
-                CrimeLab.get(getActivity()).deleteCrime(crime);
-                adapter.notifyDataSetChanged();
-                return true;
-        }
+        // TODO: not sure if this will work
         return super.onContextItemSelected(item);
+//        AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
+//        int position = info.position;
+//        CrimeAdapter adapter = (CrimeAdapter) mRecyclerView.getAdapter();
+//        Crime crime = adapter.getItem(position);
+//
+//        switch (item.getItemId()) {
+//            case R.id.menu_item_delete_crime:
+//                CrimeLab.get(getActivity()).deleteCrime(crime);
+//                adapter.notifyDataSetChanged();
+//                return true;
+//        }
+//        return super.onContextItemSelected(item);
     }
 
-    private class CrimeAdapter extends ArrayAdapter<Crime> {
-        public CrimeAdapter(ArrayList<Crime> crimes) {
-            super(getActivity(), android.R.layout.simple_list_item_1, crimes);
+    private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private final TextView mTitleTextView;
+        private final TextView mDateTextView;
+        private final CheckBox mSolvedCheckBox;
+        private Crime mCrime;
+
+        public CrimeHolder(View itemView) {
+            super(itemView);
+            mTitleTextView = (TextView) itemView.findViewById(R.id.crime_list_item_titleTextView);
+            mDateTextView = (TextView) itemView.findViewById(R.id.crime_list_item_dateTextView);
+            mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.crime_list_item_solvedCheckBox);
+            itemView.setOnClickListener(this);
+        }
+
+        public void setCrime(Crime crime) {
+            mCrime = crime;
+            mTitleTextView.setText(crime.getTitle());
+            mDateTextView.setText(crime.getDate().toString());
+            mSolvedCheckBox.setChecked(crime.isSolved());
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // if we weren't given a view, inflate one
-            if (null == convertView) {
-                convertView = getActivity().getLayoutInflater()
-                    .inflate(R.layout.list_item_crime, null);
+        public void onClick(View v) {
+            if (mCrime == null) {
+                return;
             }
 
-            // configure the view for this Crime
-            Crime c = getItem(position);
+            selectCrime(mCrime);
+        }
+    }
 
-            TextView titleTextView =
-                (TextView)convertView.findViewById(R.id.crime_list_item_titleTextView);
-            titleTextView.setText(c.getTitle());
-            TextView dateTextView =
-                (TextView)convertView.findViewById(R.id.crime_list_item_dateTextView);
-            dateTextView.setText(c.getDate().toString());
-            CheckBox solvedCheckBox =
-                (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
-            solvedCheckBox.setChecked(c.isSolved());
+    private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
+        @Override
+        public CrimeHolder onCreateViewHolder(ViewGroup parent, int pos) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.list_item_crime, parent, false);
+            return new CrimeHolder(view);
+        }
 
-            return convertView;
+        @Override
+        public void onBindViewHolder(CrimeHolder holder, int pos) {
+            Crime crime = mCrimes.get(pos);
+            holder.setCrime(crime);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mCrimes.size();
         }
     }
 }
