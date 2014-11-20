@@ -49,7 +49,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
 
         // Default selection mode background drawable is this
         setSelectionModeBackgroundDrawable(
-                getThemeResourceDrawable(itemView.getContext(), android.R.attr.listChoiceBackgroundIndicator));
+                getThemeResourceDrawable(itemView.getContext(), android.R.attr.activatedBackgroundIndicator));
         setDefaultModeBackgroundDrawable(
                 itemView.getBackground());
 
@@ -60,7 +60,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     }
 
     public void setActivated(boolean isActivated) {
-        itemView.setActivated(isActivated());
+        itemView.setActivated(isActivated);
     }
 
     public boolean isActivated() {

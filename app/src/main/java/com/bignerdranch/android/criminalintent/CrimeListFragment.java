@@ -108,6 +108,7 @@ public class CrimeListFragment extends BaseFragment {
         public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
             mIsInSelectionMode = true;
             mSelectedCrimes = new HashSet<Crime>();
+            mRecyclerView.getAdapter().notifyDataSetChanged();
             return false;
         }
 
