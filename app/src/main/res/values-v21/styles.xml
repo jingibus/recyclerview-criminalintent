@@ -1,6 +1,9 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
 
         <!--<item name="colorPrimary">#FF595951</item>-->
         <!--<item name="colorPrimaryDark">#FF5C5C5C</item>-->

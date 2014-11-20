@@ -1,11 +1,16 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -13,17 +18,35 @@ import java.util.UUID;
 public class CrimePagerActivity extends ActionBarActivity {
     ViewPager mViewPager;
 
+    public static ActivityOptions getTransition(Activity activity, View crimeView) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            crimeView.setTransitionName("crime");
+
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(activity,
+                    crimeView, "crime");
+
+            return options;
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         mViewPager = new ViewPager(this);
         mViewPager.setId(R.id.viewPager);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mViewPager.setTransitionName("crime");
+        }
         setContentView(mViewPager);
 
         final ArrayList<Crime> crimes = CrimeLab.get(this).getCrimes();
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
             @Override
             public int getCount() {
