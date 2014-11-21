@@ -4,9 +4,12 @@ import android.animation.AnimatorInflater;
 import android.animation.StateListAnimator;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.StateSet;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -44,18 +47,40 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
         return context.getResources().getDrawable(drawableResId);
     }
 
+    private static Drawable getAccentStateDrawable(Context context) {
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.colorAccent, typedValue, true);
+
+        Drawable colorDrawable = new ColorDrawable(typedValue.data);
+
+        StateListDrawable stateListDrawable = new StateListDrawable();
+        stateListDrawable.addState(new int[]{android.R.attr.state_activated}, colorDrawable);
+        stateListDrawable.addState(StateSet.WILD_CARD, null);
+
+        return stateListDrawable;
+    }
+
     public SelectableHolder(View itemView) {
         super(itemView);
 
         // Default selection mode background drawable is this
         setSelectionModeBackgroundDrawable(
-                getThemeResourceDrawable(itemView.getContext(), android.R.attr.activatedBackgroundIndicator));
+                getAccentStateDrawable(itemView.getContext()));
         setDefaultModeBackgroundDrawable(
                 itemView.getBackground());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSelectionModeStateListAnimator(null);
+            setSelectionModeStateListAnimator(getRaiseStateListAnimator(itemView.getContext()));
             setDefaultModeStateListAnimator(itemView.getStateListAnimator());
+        }
+    }
+
+    private StateListAnimator getRaiseStateListAnimator(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return AnimatorInflater.loadStateListAnimator(context, R.anim.raise);
+        } else {
+            return null;
         }
     }
 
