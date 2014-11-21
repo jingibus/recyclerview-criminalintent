@@ -121,8 +121,6 @@ public class CrimeListFragment extends BaseFragment {
                         CrimeLab.get(getActivity()).deleteCrime(crime);
                     }
 
-                    mSelectedCrimes.clear();
-
                     // We used to finish the action mode here. Doing that
                     // breaks the animations in RecyclerView, though,
                     // because finishing the actionMode triggers a refresh on
@@ -270,6 +268,7 @@ public class CrimeListFragment extends BaseFragment {
         public void onBindViewHolder(CrimeHolder holder, int pos) {
             Crime crime = mCrimes.get(pos);
             holder.bindCrime(crime);
+            holder.setSelectable(mIsInSelectionMode);
         }
 
         @Override
