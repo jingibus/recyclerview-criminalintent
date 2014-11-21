@@ -3,7 +3,6 @@ package com.bignerdranch.android.criminalintent;
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -68,6 +67,11 @@ public class CrimeListFragment extends BaseFragment {
         i.putExtra(CrimeFragment.EXTRA_CRIME_ID, c.getId());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // NOTE: shared element transition here.
+            // Support library fragments do not support the three parameter
+            // startActivityForResult call. So to get this to work, the entire
+            // project had to be shifted over to use stdlib fragments,
+            // and the v13 ViewPager.
             int index = mCrimes.indexOf(c);
             CrimeHolder holder = (CrimeHolder)mRecyclerView
                     .findViewHolderForPosition(index);
@@ -121,12 +125,14 @@ public class CrimeListFragment extends BaseFragment {
                         CrimeLab.get(getActivity()).deleteCrime(crime);
                     }
 
-                    // We used to finish the action mode here. Doing that
+                    // NOTE: We used to finish the action mode here. Doing that
                     // breaks the animations in RecyclerView, though,
                     // because finishing the actionMode triggers a refresh on
                     // RecyclerView. This appears to do a notifyDataSetChanged(),
                     // which is no longer what we want to recommend for updates, as
-                    // it provides no animation.
+                    // it provides no animation. Not sure if there is an easy workaround,
+                    // because it is not possible to wait on the animations triggered
+                    // above.
                     //
                     // actionMode.finish();
                     return true;
@@ -148,16 +154,12 @@ public class CrimeListFragment extends BaseFragment {
                 final Crime crime = new Crime();
                 CrimeLab.get(getActivity()).addCrime(crime);
 
-                // NOTE: RecycleView animation code
-                // This implementation does it the hard way, kicking off an animation
-                // and waiting until it's done to open the crime activity.
-                //
-                // Another option that might be better is to
                 mRecyclerView.getAdapter().notifyItemInserted(mCrimes.indexOf(crime));
 
-                // The idea here is to have the view animate in, then trigger opening it up in a new window.
-                // Unfortunately, this does not work because the animation is not immediately triggered
-                // when you call notifyItemInserted.
+                // NOTE: Left this code in for commentary. I believe this is what you would do
+                // to wait until the new crime is added, then animate the selection of the new crime.
+                // It does not work, though: the listener will be called immediately,
+                // because no animations have been queued yet.
 //                mRecyclerView.getItemAnimator().isRunning(
 //                        new RecyclerView.ItemAnimator.ItemAnimatorFinishedListener() {
 //                    @Override
@@ -189,7 +191,8 @@ public class CrimeListFragment extends BaseFragment {
     }
 
 
-    private class CrimeHolder extends SelectableHolder implements View.OnClickListener {
+    private class CrimeHolder extends SelectableHolder
+            implements View.OnClickListener, View.OnLongClickListener {
         private final TextView mTitleTextView;
         private final TextView mDateTextView;
         private final CheckBox mSolvedCheckBox;
@@ -202,16 +205,8 @@ public class CrimeListFragment extends BaseFragment {
             mDateTextView = (TextView) itemView.findViewById(R.id.crime_list_item_dateTextView);
             mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.crime_list_item_solvedCheckBox);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
             itemView.setLongClickable(true);
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    ActionBarActivity activity = (ActionBarActivity)getActivity();
-                    activity.startSupportActionMode(deleteMode);
-                    toggleSelection();
-                    return true;
-                }
-            });
         }
 
         public void bindCrime(Crime crime) {
@@ -241,18 +236,20 @@ public class CrimeListFragment extends BaseFragment {
 
         private void toggleSelection() {
             setActivated(!isActivated());
-//            itemView.setActivated(!itemView.isActivated());
-//            ColorStateList colorStateList =
-//                    getActivity().getResources()
-//                    .getColorStateList(R.color.background);
-//
+
             if (mSelectedCrimes.contains(mCrime)) {
                 mSelectedCrimes.remove(mCrime);
             } else {
                 mSelectedCrimes.add(mCrime);
             }
-//
-//            itemView.setActivated(mSelectedCrimes.contains(mCrime));
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            ActionBarActivity activity = (ActionBarActivity)getActivity();
+            activity.startSupportActionMode(deleteMode);
+            toggleSelection();
+            return true;
         }
     }
 
