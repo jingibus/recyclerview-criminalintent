@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_activated="true">
+        <set android:ordering="together">
+            <objectAnimator
+                android:duration="@android:integer/config_shortAnimTime"
+                android:propertyName="translationZ"
+                android:valueTo="@dimen/touch_raise"
+                android:valueType="floatType" />
+            <!--<objectAnimator-->
+                <!--android:duration="@android:integer/config_shortAnimTime"-->
+                <!--android:propertyName="backgroundColor"-->
+                <!--android:valueFrom="@color/primaryDark"-->
+                <!--android:valueTo="@color/primaryDark" />-->
+        </set>
+
+    </item>
+    <item>
+        <set android:ordering="together">
+            <objectAnimator
+                android:duration="@android:integer/config_shortAnimTime"
+                android:propertyName="translationZ"
+                android:valueTo="0dp"
+                android:valueType="floatType" />
+            <!--<objectAnimator-->
+                <!--android:duration="@android:integer/config_shortAnimTime"-->
+                <!--android:propertyName="backgroundColor"-->
+                <!--android:valueTo="@color/background_material_dark"-->
+                <!--android:valueFrom="@color/primaryDark"/>-->
+        </set>
+    </item>
+</selector>
