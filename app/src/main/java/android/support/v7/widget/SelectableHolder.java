@@ -8,11 +8,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
-import android.support.v7.widget.RecyclerView;
 import android.util.StateSet;
 import android.util.TypedValue;
 import android.view.View;
 
+import com.bignerdranch.android.criminalintent.Multiselector;
 import com.bignerdranch.android.criminalintent.R;
 
 /**
@@ -39,19 +39,12 @@ import com.bignerdranch.android.criminalintent.R;
 public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     private boolean mIsSelectable = false;
 
+    private Multiselector mMultiselector;
+
     private Drawable mSelectionModeBackgroundDrawable;
     private Drawable mDefaultModeBackgroundDrawable;
     private StateListAnimator mSelectionModeStateListAnimator;
     private StateListAnimator mDefaultModeStateListAnimator;
-
-    private static Drawable getThemeResourceDrawable(Context context, int themeAttr) {
-        TypedValue typedValue = new TypedValue();
-        Resources.Theme theme = context.getTheme();
-        theme.resolveAttribute(themeAttr, typedValue, true);
-        int drawableResId = typedValue.resourceId;
-
-        return context.getResources().getDrawable(drawableResId);
-    }
 
     private static Drawable getAccentStateDrawable(Context context) {
         TypedValue typedValue = new TypedValue();
@@ -67,8 +60,13 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
         return stateListDrawable;
     }
 
-    public SelectableHolder(View itemView) {
+    public SelectableHolder(View itemView, Multiselector multiselector) {
         super(itemView);
+        mMultiselector = multiselector;
+    }
+
+    public SelectableHolder(View itemView) {
+        this(itemView, null);
 
         // Default selection mode background drawable is this
         setSelectionModeBackgroundDrawable(
@@ -90,7 +88,18 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
         }
     }
 
-
+    /**
+     * Overridden to detect when this holder has been bound to a new adapter item.
+     * @param flags
+     * @param mask
+     */
+    @Override
+    void setFlags(int flags, int mask) {
+        super.setFlags(flags, mask);
+        if (mMultiselector != null && (((mask & flags ) & FLAG_BOUND) == FLAG_BOUND) ) {
+            mMultiselector.bindHolder(this, mPosition, mItemId);
+        }
+    }
 
     /**
      * Calls through to {@link #itemView#setActivated}.
