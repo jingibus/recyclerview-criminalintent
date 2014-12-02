@@ -3,6 +3,9 @@ package com.bignerdranch.android.criminalintent;
 import android.support.v7.widget.SelectableHolder;
 import android.util.SparseBooleanArray;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Multiselector {
     private SparseBooleanArray mSelections = new SparseBooleanArray();
     private WeakHolderTracker mTracker = new WeakHolderTracker();
@@ -46,8 +49,39 @@ public class Multiselector {
         refreshAllHolders();
     }
 
+    public List<Integer> getSelectedPositions() {
+        List<Integer> positions = new ArrayList<Integer>();
+
+        for (int i = 0; i < mSelections.size(); i++) {
+            if (mSelections.valueAt(i)) {
+                positions.add(mSelections.keyAt(i));
+            }
+        }
+
+        return positions;
+    }
+
     public void bindHolder(SelectableHolder holder, int position, long id) {
         mTracker.bindHolder(holder, position);
         refreshHolder(holder);
+    }
+
+    public void setSelected(SelectableHolder holder, boolean isSelected) {
+        setSelected(holder.getPosition(), holder.getItemId(), isSelected);
+    }
+
+    public boolean tapSelection(SelectableHolder holder) {
+        return tapSelection(holder.getPosition(), holder.getItemId());
+    }
+
+    private boolean tapSelection(int position, long itemId) {
+        if (mIsSelectable) {
+            boolean isSelected = isSelected(position, itemId);
+            setSelected(position, itemId, !isSelected);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }
