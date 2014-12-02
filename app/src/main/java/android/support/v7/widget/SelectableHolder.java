@@ -1,4 +1,4 @@
-package com.bignerdranch.android.criminalintent;
+package android.support.v7.widget;
 
 import android.animation.AnimatorInflater;
 import android.animation.StateListAnimator;
@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.StateSet;
 import android.util.TypedValue;
 import android.view.View;
+
+import com.bignerdranch.android.criminalintent.R;
 
 /**
  * A holder extended to support having a selectable mode with a different
@@ -87,6 +89,8 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
             return null;
         }
     }
+
+
 
     /**
      * Calls through to {@link #itemView#setActivated}.
