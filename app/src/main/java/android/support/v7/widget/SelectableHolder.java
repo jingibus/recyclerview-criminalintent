@@ -46,27 +46,6 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     private StateListAnimator mSelectionModeStateListAnimator;
     private StateListAnimator mDefaultModeStateListAnimator;
 
-    private static Drawable getAccentStateDrawable(Context context) {
-        TypedValue typedValue = new TypedValue();
-        Resources.Theme theme = context.getTheme();
-        theme.resolveAttribute(R.attr.colorAccent, typedValue, true);
-
-        Drawable colorDrawable = new ColorDrawable(typedValue.data);
-
-        StateListDrawable stateListDrawable = new StateListDrawable();
-        stateListDrawable.addState(new int[]{android.R.attr.state_activated}, colorDrawable);
-        stateListDrawable.addState(StateSet.WILD_CARD, null);
-
-        return stateListDrawable;
-    }
-
-    private static StateListAnimator getRaiseStateListAnimator(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return AnimatorInflater.loadStateListAnimator(context, R.anim.raise);
-        } else {
-            return null;
-        }
-    }
 
     public SelectableHolder(View itemView, Multiselector multiselector) {
         super(itemView);
@@ -88,7 +67,98 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
         this(itemView, null);
     }
 
+    /**
+     * Background drawable to use in selection mode. This defaults to
+     * a state list drawable that uses the colorAccent theme value when
+     * <code>state_activated==true</code>.
+     * @return
+     */
+    public Drawable getSelectionModeBackgroundDrawable() {
+        return mSelectionModeBackgroundDrawable;
+    }
 
+    /**
+     * Set the background drawable to be used in selection mode.
+     * @param selectionModeBackgroundDrawable
+     */
+    public void setSelectionModeBackgroundDrawable(Drawable selectionModeBackgroundDrawable) {
+        mSelectionModeBackgroundDrawable = selectionModeBackgroundDrawable;
+
+        if (mIsSelectable) {
+            itemView.setBackgroundDrawable(selectionModeBackgroundDrawable);
+        }
+    }
+
+    /**
+     * Background drawable to use when not in selection mode. This defaults
+     * to the drawable that was set on {@link #itemView} at construction time.
+     * @return
+     */
+    public Drawable getDefaultModeBackgroundDrawable() {
+        return mDefaultModeBackgroundDrawable;
+    }
+
+    /**
+     * Set the background drawable to use when not in selection mode.
+     * @param defaultModeBackgroundDrawable
+     */
+    public void setDefaultModeBackgroundDrawable(Drawable defaultModeBackgroundDrawable) {
+        mDefaultModeBackgroundDrawable = defaultModeBackgroundDrawable;
+
+        if (!mIsSelectable) {
+            itemView.setBackgroundDrawable(mDefaultModeBackgroundDrawable);
+        }
+    }
+
+    /**
+     * State list animator to use when in selection mode. This defaults
+     * to an animator that raises the view when <code>state_activated==true</code>.
+     * @return
+     */
+    public StateListAnimator getSelectionModeStateListAnimator() {
+        return mSelectionModeStateListAnimator;
+    }
+
+    /**
+     * Set the state list animator to use when in selection mode. If not run
+     * on a Lollipop device, this method is a no-op.
+     * @param resId
+     */
+    public void setSelectionModeStateListAnimatorResource(int resId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            StateListAnimator animator =
+                    AnimatorInflater.loadStateListAnimator(itemView.getContext(), resId);
+
+            setSelectionModeStateListAnimator(animator);
+        }
+    }
+
+    /**
+     * Set the state list animator to use when in selection mode.
+     * @param selectionModeStateListAnimator
+     */
+    public void setSelectionModeStateListAnimator(StateListAnimator selectionModeStateListAnimator) {
+        mSelectionModeStateListAnimator = selectionModeStateListAnimator;
+    }
+
+    /**
+     * Get the state list animator to use when not in selection mode.
+     * This value defaults to the animator set on {@link #itemView} at
+     * construction time.
+     * @return
+     */
+    public StateListAnimator getDefaultModeStateListAnimator() {
+        return mDefaultModeStateListAnimator;
+    }
+
+    /**
+     * Set the state list animator to use when not in selection mode.
+     *
+     * @param defaultModeStateListAnimator
+     */
+    public void setDefaultModeStateListAnimator(StateListAnimator defaultModeStateListAnimator) {
+        mDefaultModeStateListAnimator = defaultModeStateListAnimator;
+    }
     /**
      * Overridden to detect when this holder has been bound to a new adapter item.
      * @param flags
@@ -165,96 +235,26 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    /**
-     * Background drawable to use in selection mode. This defaults to
-     * a state list drawable that uses the colorAccent theme value when
-     * <code>state_activated==true</code>.
-     * @return
-     */
-    public Drawable getSelectionModeBackgroundDrawable() {
-        return mSelectionModeBackgroundDrawable;
+    private static Drawable getAccentStateDrawable(Context context) {
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.colorAccent, typedValue, true);
+
+        Drawable colorDrawable = new ColorDrawable(typedValue.data);
+
+        StateListDrawable stateListDrawable = new StateListDrawable();
+        stateListDrawable.addState(new int[]{android.R.attr.state_activated}, colorDrawable);
+        stateListDrawable.addState(StateSet.WILD_CARD, null);
+
+        return stateListDrawable;
     }
 
-    /**
-     * Set the background drawable to be used in selection mode.
-     * @param selectionModeBackgroundDrawable
-     */
-    public void setSelectionModeBackgroundDrawable(Drawable selectionModeBackgroundDrawable) {
-        mSelectionModeBackgroundDrawable = selectionModeBackgroundDrawable;
-
-        if (mIsSelectable) {
-            itemView.setBackgroundDrawable(selectionModeBackgroundDrawable);
-        }
-    }
-
-    /**
-     * Background drawable to use when not in selection mode. This defaults
-     * to the drawable that was set on {@link #itemView} at construction time.
-     * @return
-     */
-    public Drawable getDefaultModeBackgroundDrawable() {
-        return mDefaultModeBackgroundDrawable;
-    }
-
-    /**
-     * Set the background drawable to use when not in selection mode.
-     * @param defaultModeBackgroundDrawable
-     */
-    public void setDefaultModeBackgroundDrawable(Drawable defaultModeBackgroundDrawable) {
-        mDefaultModeBackgroundDrawable = defaultModeBackgroundDrawable;
-
-        if (!mIsSelectable) {
-            itemView.setBackgroundDrawable(mDefaultModeBackgroundDrawable);
-        }
-    }
-
-    /**
-     * State list animator to use when in selection mode. This defaults
-     * to an animator that raises the view when <code>state_activated==true</code>.
-     * @return
-     */
-    public StateListAnimator getSelectionModeStateListAnimator() {
-        return mSelectionModeStateListAnimator;
-    }
-
-    /**
-     * Set the state list animator to use when in selection mode. If not run
-     * on a Lollipop device, this method is a no-op.
-     * @param resId
-     */
-    public void setSelectionModeStateListAnimatorResource(int resId) {
+    private static StateListAnimator getRaiseStateListAnimator(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            StateListAnimator animator =
-                AnimatorInflater.loadStateListAnimator(itemView.getContext(), resId);
-
-            setSelectionModeStateListAnimator(animator);
+            return AnimatorInflater.loadStateListAnimator(context, R.anim.raise);
+        } else {
+            return null;
         }
     }
 
-    /**
-     * Set the state list animator to use when in selection mode.
-     * @param selectionModeStateListAnimator
-     */
-    public void setSelectionModeStateListAnimator(StateListAnimator selectionModeStateListAnimator) {
-        mSelectionModeStateListAnimator = selectionModeStateListAnimator;
-    }
-
-    /**
-     * Get the state list animator to use when not in selection mode.
-     * This value defaults to the animator set on {@link #itemView} at
-     * construction time.
-     * @return
-     */
-    public StateListAnimator getDefaultModeStateListAnimator() {
-        return mDefaultModeStateListAnimator;
-    }
-
-    /**
-     * Set the state list animator to use when not in selection mode.
-     *
-     * @param defaultModeStateListAnimator
-     */
-    public void setDefaultModeStateListAnimator(StateListAnimator defaultModeStateListAnimator) {
-        mDefaultModeStateListAnimator = defaultModeStateListAnimator;
-    }
 }
