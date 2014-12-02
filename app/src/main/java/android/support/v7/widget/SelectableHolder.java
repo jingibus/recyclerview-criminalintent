@@ -140,9 +140,12 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
      * @param isSelectable
      */
     public void setSelectable(boolean isSelectable) {
+        boolean changed = isSelectable != mIsSelectable;
         mIsSelectable = isSelectable;
 
-        refreshChrome();
+        if (changed) {
+            refreshChrome();
+        }
     }
 
     private void refreshChrome() {
