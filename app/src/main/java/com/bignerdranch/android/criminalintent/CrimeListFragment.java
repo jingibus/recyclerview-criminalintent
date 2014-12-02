@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class CrimeListFragment extends BaseFragment {
@@ -122,9 +123,14 @@ public class CrimeListFragment extends BaseFragment {
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menu_item_delete_crime:
+                    List<Crime> crimes = new ArrayList<Crime>();
+
                     for (Integer position : mMultiselector.getSelectedPositions()) {
-                        mRecyclerView.getAdapter().notifyItemRemoved(position);
-                        Crime crime = mCrimes.get(position);
+                        crimes.add(mCrimes.get(position));
+                    }
+
+                    for (Crime crime : crimes) {
+                        mRecyclerView.getAdapter().notifyItemRemoved(mCrimes.indexOf(crime));
                         CrimeLab.get(getActivity()).deleteCrime(crime);
                     }
 
