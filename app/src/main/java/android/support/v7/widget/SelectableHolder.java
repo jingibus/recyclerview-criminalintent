@@ -63,10 +63,6 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     public SelectableHolder(View itemView, Multiselector multiselector) {
         super(itemView);
         mMultiselector = multiselector;
-    }
-
-    public SelectableHolder(View itemView) {
-        this(itemView, null);
 
         // Default selection mode background drawable is this
         setSelectionModeBackgroundDrawable(
@@ -78,6 +74,10 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
             setSelectionModeStateListAnimator(getRaiseStateListAnimator(itemView.getContext()));
             setDefaultModeStateListAnimator(itemView.getStateListAnimator());
         }
+    }
+
+    public SelectableHolder(View itemView) {
+        this(itemView, null);
     }
 
     private StateListAnimator getRaiseStateListAnimator(Context context) {
