@@ -9,7 +9,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeakHolderTracker {
+class WeakHolderTracker {
     private SparseArray<WeakReference<SelectableHolder>> mHoldersByPosition =
             new SparseArray<WeakReference<SelectableHolder>>();
 
