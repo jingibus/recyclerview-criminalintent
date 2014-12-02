@@ -60,6 +60,14 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
         return stateListDrawable;
     }
 
+    private static StateListAnimator getRaiseStateListAnimator(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return AnimatorInflater.loadStateListAnimator(context, R.anim.raise);
+        } else {
+            return null;
+        }
+    }
+
     public SelectableHolder(View itemView, Multiselector multiselector) {
         super(itemView);
         mMultiselector = multiselector;
@@ -80,13 +88,6 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
         this(itemView, null);
     }
 
-    private StateListAnimator getRaiseStateListAnimator(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return AnimatorInflater.loadStateListAnimator(context, R.anim.raise);
-        } else {
-            return null;
-        }
-    }
 
     /**
      * Overridden to detect when this holder has been bound to a new adapter item.
