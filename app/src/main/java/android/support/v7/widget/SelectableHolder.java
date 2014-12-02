@@ -46,7 +46,19 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     private StateListAnimator mSelectionModeStateListAnimator;
     private StateListAnimator mDefaultModeStateListAnimator;
 
-
+    /**
+     * Construct a new SelectableHolder hooked up to be controlled by a Multiselector.
+     *
+     * If the Multiselector is not null, the SelectableHolder can be selected by
+     * calling {@link com.bignerdranch.android.criminalintent.Multiselector#setSelected(SelectableHolder, boolean)}.
+     *
+     * If the Multiselector is null, the SelectableHolder acts as a standalone
+     * ViewHolder that you can control manually by setting {@link #setSelectable(boolean)}
+     * and {@link #setActivated(boolean)}
+     *
+     * @param itemView Item view for this ViewHolder
+     * @param multiselector
+     */
     public SelectableHolder(View itemView, Multiselector multiselector) {
         super(itemView);
         mMultiselector = multiselector;
@@ -62,7 +74,15 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
             setDefaultModeStateListAnimator(itemView.getStateListAnimator());
         }
     }
-
+    /**
+     * Construct a new standalone SelectableHolder.
+     *
+     * Selectable state can be controlled manually by setting {@link #setSelectable(boolean)}.
+     *
+     * and {@link #setActivated(boolean)}
+     *
+     * @param itemView Item view for this ViewHolder
+     */
     public SelectableHolder(View itemView) {
         this(itemView, null);
     }
