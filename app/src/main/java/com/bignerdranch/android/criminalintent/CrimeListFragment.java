@@ -30,8 +30,6 @@ import java.util.Set;
 public class CrimeListFragment extends BaseFragment {
 
     private RecyclerView mRecyclerView;
-    private boolean mIsInSelectionMode = false;
-    private Set<Crime> mSelectedCrimes = new HashSet<Crime>();
 
     private Multiselector mMultiselector = new Multiselector();
 
@@ -223,12 +221,6 @@ public class CrimeListFragment extends BaseFragment {
             mTitleTextView.setText(crime.getTitle());
             mDateTextView.setText(crime.getDate().toString());
             mSolvedCheckBox.setChecked(crime.isSolved());
-
-            if (mIsInSelectionMode && mSelectedCrimes.contains(mCrime)) {
-                setActivated(true);
-            } else {
-                setActivated(false);
-            }
         }
 
         @Override
@@ -262,7 +254,6 @@ public class CrimeListFragment extends BaseFragment {
         public void onBindViewHolder(CrimeHolder holder, int pos) {
             Crime crime = mCrimes.get(pos);
             holder.bindCrime(crime);
-            holder.setSelectable(mIsInSelectionMode);
         }
 
         @Override
