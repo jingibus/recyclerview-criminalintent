@@ -32,7 +32,9 @@ public class Multiselector {
             return;
         }
         holder.setSelectable(mIsSelectable);
-        holder.setActivated(mSelections.get(holder.getPosition()));
+
+        boolean isActivated = mSelections.get(holder.getPosition());
+        holder.setActivated(isActivated);
     }
 
     public boolean isSelected(int position, long id) {
