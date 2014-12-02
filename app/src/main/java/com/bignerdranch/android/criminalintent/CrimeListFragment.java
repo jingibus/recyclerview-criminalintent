@@ -32,6 +32,8 @@ public class CrimeListFragment extends BaseFragment {
     private boolean mIsInSelectionMode = false;
     private Set<Crime> mSelectedCrimes = new HashSet<Crime>();
 
+    private Multiselector mMultiselector = new Multiselector();
+
     private ArrayList<Crime> mCrimes;
     private boolean mSubtitleVisible;
     
@@ -111,9 +113,8 @@ public class CrimeListFragment extends BaseFragment {
 
         @Override
         public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            mIsInSelectionMode = true;
-            mSelectedCrimes = new HashSet<Crime>();
-            mRecyclerView.getAdapter().notifyDataSetChanged();
+            mMultiselector.clearSelections();
+            mMultiselector.setSelectable(true);
             return false;
         }
 
@@ -121,8 +122,9 @@ public class CrimeListFragment extends BaseFragment {
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menu_item_delete_crime:
-                    for (Crime crime : mSelectedCrimes) {
-                        mRecyclerView.getAdapter().notifyItemRemoved(mCrimes.indexOf(crime));
+                    for (Integer position : mMultiselector.getSelectedPositions()) {
+                        mRecyclerView.getAdapter().notifyItemRemoved(position);
+                        Crime crime = mCrimes.get(position);
                         CrimeLab.get(getActivity()).deleteCrime(crime);
                     }
 
@@ -145,7 +147,7 @@ public class CrimeListFragment extends BaseFragment {
 
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
-            mIsInSelectionMode = false;
+            mMultiselector.setSelectable(false);
         }
     };
 
@@ -200,7 +202,7 @@ public class CrimeListFragment extends BaseFragment {
         private Crime mCrime;
 
         public CrimeHolder(View itemView) {
-            super(itemView);
+            super(itemView, mMultiselector);
 
             mTitleTextView = (TextView) itemView.findViewById(R.id.crime_list_item_titleTextView);
             mDateTextView = (TextView) itemView.findViewById(R.id.crime_list_item_dateTextView);
@@ -228,20 +230,8 @@ public class CrimeListFragment extends BaseFragment {
             if (mCrime == null) {
                 return;
             }
-            if (mIsInSelectionMode) {
-                toggleSelection();
-            } else {
+            if (!mMultiselector.tapSelection(this)) {
                 selectCrime(mCrime);
-            }
-        }
-
-        private void toggleSelection() {
-            setActivated(!isActivated());
-
-            if (mSelectedCrimes.contains(mCrime)) {
-                mSelectedCrimes.remove(mCrime);
-            } else {
-                mSelectedCrimes.add(mCrime);
             }
         }
 
@@ -249,7 +239,7 @@ public class CrimeListFragment extends BaseFragment {
         public boolean onLongClick(View v) {
             ActionBarActivity activity = (ActionBarActivity)getActivity();
             activity.startSupportActionMode(deleteMode);
-            toggleSelection();
+            mMultiselector.setSelected(this, true);
             return true;
         }
     }
