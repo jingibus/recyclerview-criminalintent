@@ -37,11 +37,11 @@ public class Multiselector {
         holder.setActivated(isActivated);
     }
 
-    public boolean isSelected(int position, long id) {
+    protected boolean isSelected(int position, long id) {
         return mSelections.get(position);
     }
 
-    public void setSelected(int position, long id, boolean isSelected) {
+    protected void setSelected(int position, long id, boolean isSelected) {
         mSelections.put(position, isSelected);
         refreshHolder(mTracker.getHolder(position));
     }
