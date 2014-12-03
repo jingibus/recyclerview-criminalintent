@@ -22,10 +22,10 @@ import android.widget.CheckBox;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
+import com.bignerdranch.android.recyclerviewchoicemode.Multiselector;
+
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class CrimeListFragment extends BaseFragment {
 

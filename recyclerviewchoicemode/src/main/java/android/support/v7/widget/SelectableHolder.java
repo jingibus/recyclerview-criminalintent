@@ -299,17 +299,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     }
 
     private static Drawable getAccentStateDrawable(Context context) {
-        TypedValue typedValue = new TypedValue();
-        Resources.Theme theme = context.getTheme();
-        theme.resolveAttribute(R.attr.colorAccent, typedValue, true);
-
-        Drawable colorDrawable = new ColorDrawable(typedValue.data);
-
-        StateListDrawable stateListDrawable = new StateListDrawable();
-        stateListDrawable.addState(new int[]{android.R.attr.state_activated}, colorDrawable);
-        stateListDrawable.addState(StateSet.WILD_CARD, null);
-
-        return stateListDrawable;
+        return context.getResources().getDrawable(R.drawable.activated_accent);
     }
 
     private static StateListAnimator getRaiseStateListAnimator(Context context) {
