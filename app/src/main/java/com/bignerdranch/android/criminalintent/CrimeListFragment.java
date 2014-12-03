@@ -31,7 +31,7 @@ public class CrimeListFragment extends BaseFragment {
 
     private RecyclerView mRecyclerView;
 
-    private Multiselector mMultiselector = new Multiselector();
+    private Multiselector mMultiselector = new Singleselector();
 
     private ArrayList<Crime> mCrimes;
     private boolean mSubtitleVisible;
