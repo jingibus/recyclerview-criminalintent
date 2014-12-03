@@ -12,8 +12,8 @@ import android.util.StateSet;
 import android.util.TypedValue;
 import android.view.View;
 
-import com.bignerdranch.android.criminalintent.Multiselector;
-import com.bignerdranch.android.criminalintent.R;
+import com.bignerdranch.android.recyclerviewchoicemode.Multiselector;
+import com.bignerdranch.android.recyclerviewchoicemode.R;
 
 /**
  * A holder extended to support having a selectable mode with a different
@@ -50,7 +50,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
      * Construct a new SelectableHolder hooked up to be controlled by a Multiselector.
      *
      * If the Multiselector is not null, the SelectableHolder can be selected by
-     * calling {@link com.bignerdranch.android.criminalintent.Multiselector#setSelected(SelectableHolder, boolean)}.
+     * calling {@link com.bignerdranch.android.recyclerviewchoicemode.Multiselector#setSelected(SelectableHolder, boolean)}.
      *
      * If the Multiselector is null, the SelectableHolder acts as a standalone
      * ViewHolder that you can control manually by setting {@link #setSelectable(boolean)}

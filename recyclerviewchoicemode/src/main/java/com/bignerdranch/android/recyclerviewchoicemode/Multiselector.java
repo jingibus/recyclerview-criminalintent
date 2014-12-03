@@ -1,4 +1,4 @@
-package com.bignerdranch.android.criminalintent;
+package com.bignerdranch.android.recyclerviewchoicemode;
 
 import android.support.v7.widget.SelectableHolder;
 import android.util.SparseBooleanArray;

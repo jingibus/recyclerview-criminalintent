@@ -1,4 +1,4 @@
-package com.bignerdranch.android.criminalintent;
+package com.bignerdranch.android.recyclerviewchoicemode;
 
 /**
  * Created by bphillips on 12/3/14.

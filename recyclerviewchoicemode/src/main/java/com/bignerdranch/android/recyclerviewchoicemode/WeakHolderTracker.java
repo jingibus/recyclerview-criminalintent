@@ -1,9 +1,7 @@
-package com.bignerdranch.android.criminalintent;
+package com.bignerdranch.android.recyclerviewchoicemode;
 
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SelectableHolder;
 import android.util.SparseArray;
-import android.util.SparseIntArray;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
