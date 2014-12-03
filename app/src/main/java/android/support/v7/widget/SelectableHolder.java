@@ -193,6 +193,17 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     }
 
     /**
+     * Overridden to update this holder's binding in the multiselector.
+     * @param offset
+     * @param applyToPreLayout
+     */
+    @Override
+    void offsetPosition(int offset, boolean applyToPreLayout) {
+        super.offsetPosition(offset, applyToPreLayout);
+        mMultiselector.bindHolder(this, mPosition, mItemId);
+    }
+
+    /**
      * Calls through to {@link #itemView#setActivated}.
      *
      * @param isActivated
