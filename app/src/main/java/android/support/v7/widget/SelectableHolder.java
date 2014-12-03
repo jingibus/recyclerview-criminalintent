@@ -280,17 +280,20 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     }
 
     private void refreshChrome() {
-        if (mIsSelectable) {
-            itemView.setBackgroundDrawable(mSelectionModeBackgroundDrawable);
-        } else {
-            itemView.setBackgroundDrawable(mDefaultModeBackgroundDrawable);
+        Drawable backgroundDrawable = mIsSelectable ? mSelectionModeBackgroundDrawable
+                : mDefaultModeBackgroundDrawable;
+        itemView.setBackgroundDrawable(backgroundDrawable);
+        if (backgroundDrawable != null) {
+            backgroundDrawable.jumpToCurrentState();
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (mIsSelectable) {
-                itemView.setStateListAnimator(mSelectionModeStateListAnimator);
-            } else {
-                itemView.setStateListAnimator(mDefaultModeStateListAnimator);
+            StateListAnimator animator = mIsSelectable ? mSelectionModeStateListAnimator
+                    : mDefaultModeStateListAnimator;
+
+            itemView.setStateListAnimator(animator);
+            if (animator != null) {
+                animator.jumpToCurrentState();
             }
         }
     }
