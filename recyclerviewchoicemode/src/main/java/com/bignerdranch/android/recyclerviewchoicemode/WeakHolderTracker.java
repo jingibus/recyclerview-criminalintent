@@ -1,6 +1,5 @@
 package com.bignerdranch.android.recyclerviewchoicemode;
 
-import android.support.v7.widget.SelectableHolder;
 import android.util.SparseArray;
 
 import java.lang.ref.WeakReference;

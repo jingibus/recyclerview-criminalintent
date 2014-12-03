@@ -9,7 +9,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.SelectableHolder;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -22,7 +21,8 @@ import android.widget.CheckBox;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.Multiselector;
+import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
+import com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class CrimeListFragment extends BaseFragment {
 
     private RecyclerView mRecyclerView;
 
-    private Multiselector mMultiselector = new Multiselector();
+    private MultiSelector mMultiSelector = new MultiSelector();
 
     private ArrayList<Crime> mCrimes;
     private boolean mSubtitleVisible;
@@ -112,8 +112,8 @@ public class CrimeListFragment extends BaseFragment {
 
         @Override
         public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            mMultiselector.clearSelections();
-            mMultiselector.setSelectable(true);
+            mMultiSelector.clearSelections();
+            mMultiSelector.setSelectable(true);
             return false;
         }
 
@@ -123,7 +123,7 @@ public class CrimeListFragment extends BaseFragment {
                 case R.id.menu_item_delete_crime:
                     List<Crime> crimes = new ArrayList<Crime>();
 
-                    for (Integer position : mMultiselector.getSelectedPositions()) {
+                    for (Integer position : mMultiSelector.getSelectedPositions()) {
                         crimes.add(mCrimes.get(position));
                     }
 
@@ -132,7 +132,7 @@ public class CrimeListFragment extends BaseFragment {
                         CrimeLab.get(getActivity()).deleteCrime(crime);
                     }
 
-                    mMultiselector.clearSelections();
+                    mMultiSelector.clearSelections();
                     // NOTE: We used to finish the action mode here. Doing that
                     // breaks the animations in RecyclerView, though,
                     // because finishing the actionMode triggers a refresh on
@@ -152,7 +152,7 @@ public class CrimeListFragment extends BaseFragment {
 
         @Override
         public void onDestroyActionMode(ActionMode actionMode) {
-            mMultiselector.setSelectable(false);
+            mMultiSelector.setSelectable(false);
         }
     };
 
@@ -207,7 +207,7 @@ public class CrimeListFragment extends BaseFragment {
         private Crime mCrime;
 
         public CrimeHolder(View itemView) {
-            super(itemView, mMultiselector);
+            super(itemView, mMultiSelector);
 
             mTitleTextView = (TextView) itemView.findViewById(R.id.crime_list_item_titleTextView);
             mDateTextView = (TextView) itemView.findViewById(R.id.crime_list_item_dateTextView);
@@ -229,7 +229,7 @@ public class CrimeListFragment extends BaseFragment {
             if (mCrime == null) {
                 return;
             }
-            if (!mMultiselector.tapSelection(this)) {
+            if (!mMultiSelector.tapSelection(this)) {
                 selectCrime(mCrime);
             }
         }
@@ -238,7 +238,7 @@ public class CrimeListFragment extends BaseFragment {
         public boolean onLongClick(View v) {
             ActionBarActivity activity = (ActionBarActivity)getActivity();
             activity.startSupportActionMode(deleteMode);
-            mMultiselector.setSelected(this, true);
+            mMultiSelector.setSelected(this, true);
             return true;
         }
     }

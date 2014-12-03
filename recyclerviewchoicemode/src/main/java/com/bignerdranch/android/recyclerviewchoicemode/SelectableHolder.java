@@ -1,19 +1,12 @@
-package android.support.v7.widget;
+package com.bignerdranch.android.recyclerviewchoicemode;
 
 import android.animation.AnimatorInflater;
 import android.animation.StateListAnimator;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
-import android.util.StateSet;
-import android.util.TypedValue;
+import android.support.v7.widget.RebindReportingHolder;
 import android.view.View;
-
-import com.bignerdranch.android.recyclerviewchoicemode.Multiselector;
-import com.bignerdranch.android.recyclerviewchoicemode.R;
 
 /**
  * A holder extended to support having a selectable mode with a different
@@ -36,33 +29,24 @@ import com.bignerdranch.android.recyclerviewchoicemode.R;
  * (Thanks to Kurt Nelson for examples and discussion on approaches here.
  * @see <a href="https://github.com/kurtisnelson/">https://github.com/kurtisnelson/</a>)
  */
-public abstract class SelectableHolder extends RecyclerView.ViewHolder {
-    private boolean mIsSelectable = false;
-
-    private Multiselector mMultiselector;
-
-    private Drawable mSelectionModeBackgroundDrawable;
-    private Drawable mDefaultModeBackgroundDrawable;
-    private StateListAnimator mSelectionModeStateListAnimator;
-    private StateListAnimator mDefaultModeStateListAnimator;
-
+public class SelectableHolder extends RebindReportingHolder {
     /**
      * Construct a new SelectableHolder hooked up to be controlled by a Multiselector.
      *
      * If the Multiselector is not null, the SelectableHolder can be selected by
-     * calling {@link com.bignerdranch.android.recyclerviewchoicemode.Multiselector#setSelected(SelectableHolder, boolean)}.
+     * calling {@link com.bignerdranch.android.recyclerviewchoicemode.MultiSelector#setSelected(com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder, boolean)}.
      *
      * If the Multiselector is null, the SelectableHolder acts as a standalone
      * ViewHolder that you can control manually by setting {@link #setSelectable(boolean)}
      * and {@link #setActivated(boolean)}
      *
      * @param itemView Item view for this ViewHolder
-     * @param multiselector
+     * @param multiSelector A selector set to bind this holder to
      */
-    public SelectableHolder(View itemView, Multiselector multiselector) {
+    public SelectableHolder(View itemView, MultiSelector multiSelector) {
         super(itemView);
-        mMultiselector = multiselector;
 
+        mMultiSelector = multiSelector;
         // Default selection mode background drawable is this
         setSelectionModeBackgroundDrawable(
                 getAccentStateDrawable(itemView.getContext()));
@@ -74,6 +58,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
             setDefaultModeStateListAnimator(itemView.getStateListAnimator());
         }
     }
+
     /**
      * Construct a new standalone SelectableHolder.
      *
@@ -87,11 +72,20 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
         this(itemView, null);
     }
 
+    private MultiSelector mMultiSelector;
+
+    private boolean mIsSelectable = false;
+
+    private Drawable mSelectionModeBackgroundDrawable;
+    private Drawable mDefaultModeBackgroundDrawable;
+    private StateListAnimator mSelectionModeStateListAnimator;
+    private StateListAnimator mDefaultModeStateListAnimator;
+
     /**
      * Background drawable to use in selection mode. This defaults to
      * a state list drawable that uses the colorAccent theme value when
      * <code>state_activated==true</code>.
-     * @return
+     * @return A background drawable
      */
     public Drawable getSelectionModeBackgroundDrawable() {
         return mSelectionModeBackgroundDrawable;
@@ -99,7 +93,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
 
     /**
      * Set the background drawable to be used in selection mode.
-     * @param selectionModeBackgroundDrawable
+     * @param selectionModeBackgroundDrawable A background drawable
      */
     public void setSelectionModeBackgroundDrawable(Drawable selectionModeBackgroundDrawable) {
         mSelectionModeBackgroundDrawable = selectionModeBackgroundDrawable;
@@ -112,7 +106,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     /**
      * Background drawable to use when not in selection mode. This defaults
      * to the drawable that was set on {@link #itemView} at construction time.
-     * @return
+     * @return A background drawable
      */
     public Drawable getDefaultModeBackgroundDrawable() {
         return mDefaultModeBackgroundDrawable;
@@ -120,7 +114,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
 
     /**
      * Set the background drawable to use when not in selection mode.
-     * @param defaultModeBackgroundDrawable
+     * @param defaultModeBackgroundDrawable A background drawable
      */
     public void setDefaultModeBackgroundDrawable(Drawable defaultModeBackgroundDrawable) {
         mDefaultModeBackgroundDrawable = defaultModeBackgroundDrawable;
@@ -133,7 +127,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     /**
      * State list animator to use when in selection mode. This defaults
      * to an animator that raises the view when <code>state_activated==true</code>.
-     * @return
+     * @return A state list animator
      */
     public StateListAnimator getSelectionModeStateListAnimator() {
         return mSelectionModeStateListAnimator;
@@ -142,7 +136,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     /**
      * Set the state list animator to use when in selection mode. If not run
      * on a Lollipop device, this method is a no-op.
-     * @param resId
+     * @param resId A state list animator resource id. Ignored prior to Lollipop.
      */
     public void setSelectionModeStateListAnimatorResource(int resId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -155,7 +149,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
 
     /**
      * Set the state list animator to use when in selection mode.
-     * @param selectionModeStateListAnimator
+     * @param selectionModeStateListAnimator A state list animator
      */
     public void setSelectionModeStateListAnimator(StateListAnimator selectionModeStateListAnimator) {
         mSelectionModeStateListAnimator = selectionModeStateListAnimator;
@@ -165,7 +159,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
      * Get the state list animator to use when not in selection mode.
      * This value defaults to the animator set on {@link #itemView} at
      * construction time.
-     * @return
+     * @return A state list animator
      */
     public StateListAnimator getDefaultModeStateListAnimator() {
         return mDefaultModeStateListAnimator;
@@ -174,68 +168,15 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     /**
      * Set the state list animator to use when not in selection mode.
      *
-     * @param defaultModeStateListAnimator
+     * @param defaultModeStateListAnimator A state list animator
      */
     public void setDefaultModeStateListAnimator(StateListAnimator defaultModeStateListAnimator) {
         mDefaultModeStateListAnimator = defaultModeStateListAnimator;
     }
     /**
-     * Overridden to detect changing positions. RecyclerView often uses flags to
-     * signal that a holder has been rebound.
-     *
-     * @param flags
-     * @param mask
-     */
-    @Override
-    void setFlags(int flags, int mask) {
-        super.setFlags(flags, mask);
-        int setFlags = mask & flags;
-        checkFlags(setFlags);
-    }
-
-    /**
-     * Overridden to detect changing positions. RecyclerView often uses flags to
-     * signal that a holder has been rebound.
-     *
-     * @param flags
-     */
-    @Override
-    void addFlags(int flags) {
-        super.addFlags(flags);
-        checkFlags(flags);
-    }
-
-    private void checkFlags(int setFlags) {
-        if (mMultiselector != null && isRelevantFlagSet(setFlags)) {
-            mMultiselector.bindHolder(this, getPosition(), getItemId());
-        }
-    }
-
-    private static boolean isRelevantFlagSet(int flag) {
-        for (Integer value : new int[] { FLAG_BOUND, FLAG_CHANGED, FLAG_UPDATE, FLAG_RETURNED_FROM_SCRAP }) {
-            if ((flag & value) == value) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Overridden to update this holder's binding in the multiselector.
-     * @param offset
-     * @param applyToPreLayout
-     */
-    @Override
-    void offsetPosition(int offset, boolean applyToPreLayout) {
-        super.offsetPosition(offset, applyToPreLayout);
-        mMultiselector.bindHolder(this, getPosition(), getItemId());
-    }
-
-    /**
      * Calls through to {@link #itemView#setActivated}.
      *
-     * @param isActivated
+     * @param isActivated True to activate the view.
      */
     public void setActivated(boolean isActivated) {
         itemView.setActivated(isActivated);
@@ -243,7 +184,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
 
     /**
      * Calls through to {@link #itemView#isActivated}.
-     * @return
+     * @return True if the view is activated.
      */
     public boolean isActivated() {
         return itemView.isActivated();
@@ -253,7 +194,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
      * Returns whether {@link #itemView} is currently in a
      * selectable mode.
      *
-     * @return
+     * @return True if selectable.
      */
     public boolean isSelectable() {
         return mIsSelectable;
@@ -268,7 +209,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
      * {@link #getSelectionModeStateListAnimator()} and
      * {@link #getDefaultModeStateListAnimator()}.
      *
-     * @param isSelectable
+     * @param isSelectable True if selectable.
      */
     public void setSelectable(boolean isSelectable) {
         boolean changed = isSelectable != mIsSelectable;
@@ -277,6 +218,11 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
         if (changed) {
             refreshChrome();
         }
+    }
+
+    @Override
+    protected void onRebind() {
+        mMultiSelector.bindHolder(this, getPosition(), getItemId());
     }
 
     private void refreshChrome() {
@@ -309,5 +255,4 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
             return null;
         }
     }
-
 }

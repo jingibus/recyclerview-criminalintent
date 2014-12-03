@@ -1,12 +1,11 @@
 package com.bignerdranch.android.recyclerviewchoicemode;
 
-import android.support.v7.widget.SelectableHolder;
 import android.util.SparseBooleanArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Multiselector {
+public class MultiSelector {
     private SparseBooleanArray mSelections = new SparseBooleanArray();
     private WeakHolderTracker mTracker = new WeakHolderTracker();
 

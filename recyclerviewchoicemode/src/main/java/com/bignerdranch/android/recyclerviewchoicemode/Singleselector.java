@@ -1,9 +1,6 @@
 package com.bignerdranch.android.recyclerviewchoicemode;
 
-/**
- * Created by bphillips on 12/3/14.
- */
-public class Singleselector extends Multiselector {
+public class SingleSelector extends MultiSelector {
     @Override
     protected void setSelected(int position, long id, boolean isSelected) {
         if (isSelected) {
