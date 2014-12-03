@@ -132,6 +132,7 @@ public class CrimeListFragment extends BaseFragment {
                         CrimeLab.get(getActivity()).deleteCrime(crime);
                     }
 
+                    mMultiselector.clearSelections();
                     // NOTE: We used to finish the action mode here. Doing that
                     // breaks the animations in RecyclerView, though,
                     // because finishing the actionMode triggers a refresh on
