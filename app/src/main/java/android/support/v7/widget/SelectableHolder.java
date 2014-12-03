@@ -180,16 +180,45 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
         mDefaultModeStateListAnimator = defaultModeStateListAnimator;
     }
     /**
-     * Overridden to detect when this holder has been bound to a new adapter item.
+     * Overridden to detect changing positions. RecyclerView often uses flags to
+     * signal that a holder has been rebound.
+     *
      * @param flags
      * @param mask
      */
     @Override
     void setFlags(int flags, int mask) {
         super.setFlags(flags, mask);
-        if (mMultiselector != null && (((mask & flags ) & FLAG_BOUND) == FLAG_BOUND) ) {
-            mMultiselector.bindHolder(this, mPosition, mItemId);
+        int setFlags = mask & flags;
+        checkFlags(setFlags);
+    }
+
+    /**
+     * Overridden to detect changing positions. RecyclerView often uses flags to
+     * signal that a holder has been rebound.
+     *
+     * @param flags
+     */
+    @Override
+    void addFlags(int flags) {
+        super.addFlags(flags);
+        checkFlags(flags);
+    }
+
+    private void checkFlags(int setFlags) {
+        if (mMultiselector != null && isRelevantFlagSet(setFlags)) {
+            mMultiselector.bindHolder(this, getPosition(), getItemId());
         }
+    }
+
+    private static boolean isRelevantFlagSet(int flag) {
+        for (Integer value : new int[] { FLAG_BOUND, FLAG_CHANGED, FLAG_UPDATE, FLAG_RETURNED_FROM_SCRAP }) {
+            if ((flag & value) == value) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -200,7 +229,7 @@ public abstract class SelectableHolder extends RecyclerView.ViewHolder {
     @Override
     void offsetPosition(int offset, boolean applyToPreLayout) {
         super.offsetPosition(offset, applyToPreLayout);
-        mMultiselector.bindHolder(this, mPosition, mItemId);
+        mMultiselector.bindHolder(this, getPosition(), getItemId());
     }
 
     /**
