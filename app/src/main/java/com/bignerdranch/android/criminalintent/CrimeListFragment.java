@@ -21,6 +21,7 @@ import android.widget.CheckBox;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
+import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
 import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
 import com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder;
 
@@ -102,19 +103,12 @@ public class CrimeListFragment extends BaseFragment {
         }
     }
 
-    private ActionMode.Callback deleteMode = new ActionMode.Callback() {
+    private ActionMode.Callback deleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, menu);
             return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            mMultiSelector.clearSelections();
-            mMultiSelector.setSelectable(true);
-            return false;
         }
 
         @Override
@@ -148,11 +142,6 @@ public class CrimeListFragment extends BaseFragment {
                     break;
             }
             return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-            mMultiSelector.setSelectable(false);
         }
     };
 
