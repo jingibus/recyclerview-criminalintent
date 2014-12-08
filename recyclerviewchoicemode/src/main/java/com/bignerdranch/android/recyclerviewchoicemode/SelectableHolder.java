@@ -3,10 +3,15 @@ package com.bignerdranch.android.recyclerviewchoicemode;
 import android.animation.AnimatorInflater;
 import android.animation.StateListAnimator;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.v7.widget.RebindReportingHolder;
 import android.util.Log;
+import android.util.StateSet;
+import android.util.TypedValue;
 import android.view.View;
 
 /**
@@ -246,7 +251,17 @@ public class SelectableHolder extends RebindReportingHolder {
     }
 
     private static Drawable getAccentStateDrawable(Context context) {
-        return context.getResources().getDrawable(R.drawable.activated_accent_drawable);
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.resolveAttribute(R.attr.colorAccent, typedValue, true);
+
+        Drawable colorDrawable = new ColorDrawable(typedValue.data);
+
+        StateListDrawable stateListDrawable = new StateListDrawable();
+        stateListDrawable.addState(new int[]{android.R.attr.state_activated}, colorDrawable);
+        stateListDrawable.addState(StateSet.WILD_CARD, null);
+
+        return stateListDrawable;
     }
 
     private static StateListAnimator getRaiseStateListAnimator(Context context) {
