@@ -5,7 +5,6 @@ android {
     buildToolsVersion "21.0.2"
 
     defaultConfig {
-        applicationId "com.bignerdranch.android.recyclerviewchoicemode"
         minSdkVersion 11
         targetSdkVersion 21
         versionCode 1
@@ -16,6 +15,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 

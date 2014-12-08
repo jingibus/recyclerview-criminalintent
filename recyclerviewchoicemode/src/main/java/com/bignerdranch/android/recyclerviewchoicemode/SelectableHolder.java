@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v7.widget.RebindReportingHolder;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -47,16 +48,16 @@ public class SelectableHolder extends RebindReportingHolder {
         super(itemView);
 
         mMultiSelector = multiSelector;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setSelectionModeStateListAnimator(getRaiseStateListAnimator(itemView.getContext()));
+            setDefaultModeStateListAnimator(itemView.getStateListAnimator());
+        }
         // Default selection mode background drawable is this
         setSelectionModeBackgroundDrawable(
                 getAccentStateDrawable(itemView.getContext()));
         setDefaultModeBackgroundDrawable(
                 itemView.getBackground());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSelectionModeStateListAnimator(getRaiseStateListAnimator(itemView.getContext()));
-            setDefaultModeStateListAnimator(itemView.getStateListAnimator());
-        }
     }
 
     /**
@@ -245,12 +246,14 @@ public class SelectableHolder extends RebindReportingHolder {
     }
 
     private static Drawable getAccentStateDrawable(Context context) {
-        return context.getResources().getDrawable(R.drawable.activated_accent);
+        return context.getResources().getDrawable(R.drawable.activated_accent_drawable);
     }
 
     private static StateListAnimator getRaiseStateListAnimator(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return AnimatorInflater.loadStateListAnimator(context, R.anim.raise);
+            StateListAnimator animator = AnimatorInflater.loadStateListAnimator(context, R.anim.raise);
+            Log.i("HEY", "test");
+            return animator;
         } else {
             return null;
         }
