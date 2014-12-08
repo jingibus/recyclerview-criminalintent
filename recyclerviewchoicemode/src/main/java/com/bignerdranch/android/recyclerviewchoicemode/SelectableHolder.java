@@ -266,9 +266,7 @@ public class SelectableHolder extends RebindReportingHolder {
 
     private static StateListAnimator getRaiseStateListAnimator(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            StateListAnimator animator = AnimatorInflater.loadStateListAnimator(context, R.anim.raise);
-            Log.i("HEY", "test");
-            return animator;
+            return AnimatorInflater.loadStateListAnimator(context, R.anim.raise);
         } else {
             return null;
         }
