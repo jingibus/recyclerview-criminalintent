@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
 import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
-import com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SwappingHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -188,7 +188,7 @@ public class CrimeListFragment extends BaseFragment {
     }
 
 
-    private class CrimeHolder extends SelectableHolder
+    private class CrimeHolder extends SwappingHolder
             implements View.OnClickListener, View.OnLongClickListener {
         private final TextView mTitleTextView;
         private final TextView mDateTextView;
