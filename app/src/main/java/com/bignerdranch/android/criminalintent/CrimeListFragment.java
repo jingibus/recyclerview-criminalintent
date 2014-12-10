@@ -103,7 +103,7 @@ public class CrimeListFragment extends BaseFragment {
         }
     }
 
-    private ActionMode.Callback deleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
+    private ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
@@ -115,19 +115,16 @@ public class CrimeListFragment extends BaseFragment {
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menu_item_delete_crime:
-                    // Need to finish the action mode before doing the following.
-                    // No idea why, but it crashes.
+                    // Need to finish the action mode before doing the following,
+                    // not after. No idea why, but it crashes.
                     actionMode.finish();
 
-                    List<Crime> crimes = new ArrayList<Crime>();
-
-                    for (Integer position : mMultiSelector.getSelectedPositions()) {
-                        crimes.add(mCrimes.get(position));
-                    }
-
-                    for (Crime crime : crimes) {
-                        mRecyclerView.getAdapter().notifyItemRemoved(mCrimes.indexOf(crime));
-                        CrimeLab.get(getActivity()).deleteCrime(crime);
+                    for (int i = mCrimes.size(); i > 0; i--) {
+                        if (mMultiSelector.isSelected(i, 0)) {
+                            Crime crime = mCrimes.get(i);
+                            CrimeLab.get(getActivity()).deleteCrime(crime);
+                            mRecyclerView.getAdapter().notifyItemRemoved(i);
+                        }
                     }
 
                     mMultiSelector.clearSelections();
@@ -220,7 +217,7 @@ public class CrimeListFragment extends BaseFragment {
         @Override
         public boolean onLongClick(View v) {
             ActionBarActivity activity = (ActionBarActivity)getActivity();
-            activity.startSupportActionMode(deleteMode);
+            activity.startSupportActionMode(mDeleteMode);
             mMultiSelector.setSelected(this, true);
             return true;
         }
