@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
-import android.support.v7.widget.RebindReportingHolder;
 import android.util.StateSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -34,7 +33,7 @@ import android.view.View;
  * (Thanks to Kurt Nelson for examples and discussion on approaches here.
  * @see <a href="https://github.com/kurtisnelson/">https://github.com/kurtisnelson/</a>)
  */
-public class SwappingHolder extends AutoSelectingHolder implements SelectableHolder {
+public class SwappingHolder extends MultiSelectorBindingHolder implements SelectableHolder {
     /**
      * Construct a new SelectableHolder hooked up to be controlled by a Multiselector.
      *
@@ -143,7 +142,7 @@ public class SwappingHolder extends AutoSelectingHolder implements SelectableHol
      * on a Lollipop device, this method is a no-op.
      * @param resId A state list animator resource id. Ignored prior to Lollipop.
      */
-    public void setSelectionModeStateListAnimatorResource(int resId) {
+    public void setSelectionModeStateListAnimator(int resId) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             StateListAnimator animator =
                     AnimatorInflater.loadStateListAnimator(itemView.getContext(), resId);
@@ -177,6 +176,21 @@ public class SwappingHolder extends AutoSelectingHolder implements SelectableHol
      */
     public void setDefaultModeStateListAnimator(StateListAnimator defaultModeStateListAnimator) {
         mDefaultModeStateListAnimator = defaultModeStateListAnimator;
+    }
+
+    /**
+     * Set the state list animator to use when in default mode. If not run
+     * on a Lollipop device, this method is a no-op.
+     * @param resId A state list animator resource id. Ignored prior to Lollipop.
+     */
+    public void setDefaultModeStateListAnimator(int resId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            StateListAnimator animator =
+                    AnimatorInflater.loadStateListAnimator(itemView.getContext(), resId);
+
+            setDefaultModeStateListAnimator(animator);
+        }
+
     }
     /**
      * Calls through to {@link #itemView#setActivated}.

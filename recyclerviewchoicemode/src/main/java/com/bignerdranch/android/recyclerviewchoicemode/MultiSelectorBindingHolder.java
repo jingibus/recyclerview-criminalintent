@@ -4,10 +4,10 @@ import android.os.Build;
 import android.support.v7.widget.RebindReportingHolder;
 import android.view.View;
 
-public abstract class AutoSelectingHolder extends RebindReportingHolder implements SelectableHolder {
+public abstract class MultiSelectorBindingHolder extends RebindReportingHolder implements SelectableHolder {
     private final MultiSelector mMultiSelector;
 
-    public AutoSelectingHolder(View itemView, MultiSelector multiSelector) {
+    public MultiSelectorBindingHolder(View itemView, MultiSelector multiSelector) {
         super(itemView);
         mMultiSelector = multiSelector;
     }
