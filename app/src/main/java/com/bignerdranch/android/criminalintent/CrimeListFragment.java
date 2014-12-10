@@ -115,6 +115,10 @@ public class CrimeListFragment extends BaseFragment {
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menu_item_delete_crime:
+                    // Need to finish the action mode before doing the following.
+                    // No idea why, but it crashes.
+                    actionMode.finish();
+
                     List<Crime> crimes = new ArrayList<Crime>();
 
                     for (Integer position : mMultiSelector.getSelectedPositions()) {
@@ -127,16 +131,6 @@ public class CrimeListFragment extends BaseFragment {
                     }
 
                     mMultiSelector.clearSelections();
-                    // NOTE: We used to finish the action mode here. Doing that
-                    // breaks the animations in RecyclerView, though,
-                    // because finishing the actionMode triggers a refresh on
-                    // RecyclerView. This appears to do a notifyDataSetChanged(),
-                    // which is no longer what we want to recommend for updates, as
-                    // it provides no animation. Not sure if there is an easy workaround,
-                    // because it is not possible to wait on the animations triggered
-                    // above.
-                    //
-                    // actionMode.finish();
                     return true;
                 default:
                     break;
