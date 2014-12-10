@@ -34,7 +34,7 @@ import android.view.View;
  * (Thanks to Kurt Nelson for examples and discussion on approaches here.
  * @see <a href="https://github.com/kurtisnelson/">https://github.com/kurtisnelson/</a>)
  */
-public class SwappingHolder extends RebindReportingHolder implements SelectableHolder {
+public class SwappingHolder extends AutoSelectingHolder implements SelectableHolder {
     /**
      * Construct a new SelectableHolder hooked up to be controlled by a Multiselector.
      *
@@ -49,7 +49,7 @@ public class SwappingHolder extends RebindReportingHolder implements SelectableH
      * @param multiSelector A selector set to bind this holder to
      */
     public SwappingHolder(View itemView, MultiSelector multiSelector) {
-        super(itemView);
+        super(itemView, multiSelector);
 
         mMultiSelector = multiSelector;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -223,11 +223,6 @@ public class SwappingHolder extends RebindReportingHolder implements SelectableH
         if (changed) {
             refreshChrome();
         }
-    }
-
-    @Override
-    protected void onRebind() {
-        mMultiSelector.bindHolder(this, getPosition(), getItemId());
     }
 
     private void refreshChrome() {
