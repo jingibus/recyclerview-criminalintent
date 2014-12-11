@@ -4,4 +4,12 @@
     android:state_activated="true"
     android:drawable="@android:color/darker_gray"
     />
+  <item
+      android:state_selected="true"
+      >
+      <ripple android:color="#000000">
+      <item android:id="@android:id/mask"
+            android:drawable="@android:color/white" />
+      </ripple>
+  </item>
 </selector>

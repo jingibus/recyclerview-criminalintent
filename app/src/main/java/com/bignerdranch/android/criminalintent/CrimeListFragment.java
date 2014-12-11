@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
 import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
-import com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder;
+import com.bignerdranch.android.recyclerviewchoicemode.SwappingHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +103,7 @@ public class CrimeListFragment extends BaseFragment {
         }
     }
 
-    private ActionMode.Callback deleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
+    private ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
@@ -115,28 +115,19 @@ public class CrimeListFragment extends BaseFragment {
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.menu_item_delete_crime:
-                    List<Crime> crimes = new ArrayList<Crime>();
+                    // Need to finish the action mode before doing the following,
+                    // not after. No idea why, but it crashes.
+                    actionMode.finish();
 
-                    for (Integer position : mMultiSelector.getSelectedPositions()) {
-                        crimes.add(mCrimes.get(position));
-                    }
-
-                    for (Crime crime : crimes) {
-                        mRecyclerView.getAdapter().notifyItemRemoved(mCrimes.indexOf(crime));
-                        CrimeLab.get(getActivity()).deleteCrime(crime);
+                    for (int i = mCrimes.size(); i > 0; i--) {
+                        if (mMultiSelector.isSelected(i, 0)) {
+                            Crime crime = mCrimes.get(i);
+                            CrimeLab.get(getActivity()).deleteCrime(crime);
+                            mRecyclerView.getAdapter().notifyItemRemoved(i);
+                        }
                     }
 
                     mMultiSelector.clearSelections();
-                    // NOTE: We used to finish the action mode here. Doing that
-                    // breaks the animations in RecyclerView, though,
-                    // because finishing the actionMode triggers a refresh on
-                    // RecyclerView. This appears to do a notifyDataSetChanged(),
-                    // which is no longer what we want to recommend for updates, as
-                    // it provides no animation. Not sure if there is an easy workaround,
-                    // because it is not possible to wait on the animations triggered
-                    // above.
-                    //
-                    // actionMode.finish();
                     return true;
                 default:
                     break;
@@ -188,7 +179,7 @@ public class CrimeListFragment extends BaseFragment {
     }
 
 
-    private class CrimeHolder extends SelectableHolder
+    private class CrimeHolder extends SwappingHolder
             implements View.OnClickListener, View.OnLongClickListener {
         private final TextView mTitleTextView;
         private final TextView mDateTextView;
@@ -226,7 +217,7 @@ public class CrimeListFragment extends BaseFragment {
         @Override
         public boolean onLongClick(View v) {
             ActionBarActivity activity = (ActionBarActivity)getActivity();
-            activity.startSupportActionMode(deleteMode);
+            activity.startSupportActionMode(mDeleteMode);
             mMultiSelector.setSelected(this, true);
             return true;
         }
