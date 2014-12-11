@@ -35,12 +35,12 @@ import android.view.View;
  */
 public class SwappingHolder extends MultiSelectorBindingHolder implements SelectableHolder {
     /**
-     * Construct a new SelectableHolder hooked up to be controlled by a Multiselector.
+     * Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.
      *
-     * If the Multiselector is not null, the SelectableHolder can be selected by
-     * calling {@link com.bignerdranch.android.recyclerviewchoicemode.MultiSelector#setSelected(SwappingHolder, boolean)}.
+     * If the MultiSelector is not null, the SelectableHolder can be selected by
+     * calling {@link com.bignerdranch.android.recyclerviewchoicemode.MultiSelector#setSelected(com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder, boolean)}.
      *
-     * If the Multiselector is null, the SelectableHolder acts as a standalone
+     * If the MultiSelector is null, the SelectableHolder acts as a standalone
      * ViewHolder that you can control manually by setting {@link #setSelectable(boolean)}
      * and {@link #setActivated(boolean)}
      *
