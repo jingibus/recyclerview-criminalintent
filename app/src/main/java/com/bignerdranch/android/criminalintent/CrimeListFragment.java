@@ -21,12 +21,11 @@ import android.widget.CheckBox;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
-import com.bignerdranch.android.recyclerviewchoicemode.ModalMultiSelectorCallback;
-import com.bignerdranch.android.recyclerviewchoicemode.MultiSelector;
-import com.bignerdranch.android.recyclerviewchoicemode.SwappingHolder;
+import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
+import com.bignerdranch.android.multiselector.MultiSelector;
+import com.bignerdranch.android.multiselector.SwappingHolder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CrimeListFragment extends BaseFragment {
 

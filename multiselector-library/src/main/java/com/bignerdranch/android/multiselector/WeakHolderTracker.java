@@ -1,4 +1,4 @@
-package com.bignerdranch.android.recyclerviewchoicemode;
+package com.bignerdranch.android.multiselector;
 
 import android.util.SparseArray;
 

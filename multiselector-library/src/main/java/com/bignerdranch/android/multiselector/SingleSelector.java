@@ -1,4 +1,4 @@
-package com.bignerdranch.android.recyclerviewchoicemode;
+package com.bignerdranch.android.multiselector;
 
 public class SingleSelector extends MultiSelector {
     @Override

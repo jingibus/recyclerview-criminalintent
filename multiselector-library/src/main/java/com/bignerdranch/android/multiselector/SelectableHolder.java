@@ -1,7 +1,7 @@
-package com.bignerdranch.android.recyclerviewchoicemode;
+package com.bignerdranch.android.multiselector;
 
 /**
- * Public interface used by selectable items connected to {@link com.bignerdranch.android.recyclerviewchoicemode.MultiSelector}.
+ * Public interface used by selectable items connected to {@link com.bignerdranch.android.multiselector.MultiSelector}.
  */
 public interface SelectableHolder {
     /**
@@ -30,8 +30,8 @@ public interface SelectableHolder {
 
     /**
      * Returns the adapter position this item is currently bound to.
-     * This can (and often will) change; if attached to a {@link com.bignerdranch.android.recyclerviewchoicemode.MultiSelector},
-     * {@link com.bignerdranch.android.recyclerviewchoicemode.MultiSelector#bindHolder(SelectableHolder, int, long)}
+     * This can (and often will) change; if attached to a {@link com.bignerdranch.android.multiselector.MultiSelector},
+     * {@link com.bignerdranch.android.multiselector.MultiSelector#bindHolder(SelectableHolder, int, long)}
      * should be called whenever this value changes.
      * @return Position this holder is currently bound to.
      */
@@ -39,8 +39,8 @@ public interface SelectableHolder {
 
     /**
      * Return the item id this item is currently bound to.
-     * This can (and often will) change; if attached to a {@link com.bignerdranch.android.recyclerviewchoicemode.MultiSelector},
-     * {@link com.bignerdranch.android.recyclerviewchoicemode.MultiSelector#bindHolder(SelectableHolder, int, long)}
+     * This can (and often will) change; if attached to a {@link com.bignerdranch.android.multiselector.MultiSelector},
+     * {@link com.bignerdranch.android.multiselector.MultiSelector#bindHolder(SelectableHolder, int, long)}
      * should be called whenever this value changes.
      * @return Item id this holder is currently bound to.
      */

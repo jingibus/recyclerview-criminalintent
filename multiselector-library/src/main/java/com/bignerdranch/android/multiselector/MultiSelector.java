@@ -1,4 +1,4 @@
-package com.bignerdranch.android.recyclerviewchoicemode;
+package com.bignerdranch.android.multiselector;
 
 import android.util.SparseBooleanArray;
 
@@ -7,9 +7,9 @@ import java.util.List;
 
 /**
  * A class that handles selection logic and dispatches updates to
- * connected instances of {@link com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder}.
+ * connected instances of {@link com.bignerdranch.android.multiselector.SelectableHolder}.
  *
- * The out-of-the-box use of MultiSelector is to team it up with {@link com.bignerdranch.android.recyclerviewchoicemode.SwappingHolder}
+ * The out-of-the-box use of MultiSelector is to team it up with {@link com.bignerdranch.android.multiselector.SwappingHolder}
  * for easy selection functionality in {@link android.support.v7.widget.RecyclerView}s. Like this:
  *
  * {@code
@@ -39,7 +39,7 @@ public class MultiSelector {
 
     /**
      * Toggle whether this MultiSelector is in selection mode or not.
-     * {@link com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder#setSelectable(boolean)}
+     * {@link com.bignerdranch.android.multiselector.SelectableHolder#setSelectable(boolean)}
      * will be called on any attached holders as well.
      * @param isSelectable True if in selection mode.
      */
@@ -71,7 +71,7 @@ public class MultiSelector {
      * ignored, but subclasses may use id instead.
      *
      * If a holder is bound for this position, this will call through to
-     * {@link com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder#setActivated(boolean)}
+     * {@link com.bignerdranch.android.multiselector.SelectableHolder#setActivated(boolean)}
      * for that holder.
      *
      * @param position Position to select/unselect.
@@ -123,8 +123,8 @@ public class MultiSelector {
     /**
      * Bind a holder to a specific position/id. This implementation ignores the id.
      *
-     * Bound holders will receive calls to {@link com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder#setSelectable(boolean)}
-     * and {@link com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder#setActivated(boolean)} when
+     * Bound holders will receive calls to {@link com.bignerdranch.android.multiselector.SelectableHolder#setSelectable(boolean)}
+     * and {@link com.bignerdranch.android.multiselector.SelectableHolder#setActivated(boolean)} when
      * {@link #setSelectable(boolean)} is called, or when {@link #setSelected(int, long, boolean)} is called for the
      * associated position, respectively.
      *

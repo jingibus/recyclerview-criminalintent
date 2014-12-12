@@ -1,4 +1,4 @@
-package com.bignerdranch.android.recyclerviewchoicemode;
+package com.bignerdranch.android.multiselector;
 
 import android.animation.AnimatorInflater;
 import android.animation.StateListAnimator;
@@ -38,7 +38,7 @@ public class SwappingHolder extends MultiSelectorBindingHolder implements Select
      * Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.
      *
      * If the MultiSelector is not null, the SelectableHolder can be selected by
-     * calling {@link com.bignerdranch.android.recyclerviewchoicemode.MultiSelector#setSelected(com.bignerdranch.android.recyclerviewchoicemode.SelectableHolder, boolean)}.
+     * calling {@link com.bignerdranch.android.multiselector.MultiSelector#setSelected(com.bignerdranch.android.multiselector.SelectableHolder, boolean)}.
      *
      * If the MultiSelector is null, the SelectableHolder acts as a standalone
      * ViewHolder that you can control manually by setting {@link #setSelectable(boolean)}

@@ -12,8 +12,8 @@ import android.view.View;
  * to a new item.
  *
  * If you intend to subclass for the purpose of interfacing with
- * a {@link com.bignerdranch.android.recyclerviewchoicemode.MultiSelector},
- * use {@link com.bignerdranch.android.recyclerviewchoicemode.MultiSelectorBindingHolder}
+ * a {@link com.bignerdranch.android.multiselector.MultiSelector},
+ * use {@link com.bignerdranch.android.multiselector.MultiSelectorBindingHolder}
  * instead.
  */
 public abstract class RebindReportingHolder extends RecyclerView.ViewHolder {
