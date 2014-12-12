@@ -22,6 +22,21 @@ android {
     }
 }
 
+android.libraryVariants.all { variant ->
+    task("generate${variant.name.substring(0,1).toUpperCase() + variant.name.substring(1)}Javadoc", type: Javadoc) {
+        source = variant.javaCompile.source
+        def androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+
+        classpath = files(variant.javaCompile.classpath.files, androidJar)
+        options {
+            links "http://docs.oracle.com/javase/7/docs/api/"
+            linksOffline "http://d.android.com/reference","${android.sdkDirectory}/docs/reference"
+        }
+        exclude '**/BuildConfig.java'
+        exclude '**/R.java'
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:recyclerview-v7:+'
