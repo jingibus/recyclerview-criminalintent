@@ -1,1 +1,1 @@
-include ':app', ':recyclerviewchoicemode'
+include ':app', ':multiselector-library'
