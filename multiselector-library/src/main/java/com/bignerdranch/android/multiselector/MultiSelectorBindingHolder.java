@@ -4,11 +4,11 @@ import android.support.v7.widget.RebindReportingHolder;
 import android.view.View;
 
 /**
- * A {@link android.support.v7.widget.RecyclerView.ViewHolder} that will automatically
+ * <p>A {@link android.support.v7.widget.RecyclerView.ViewHolder} that will automatically
  * bind itself to items in a {@link com.bignerdranch.android.multiselector.MultiSelector}.
  * This is like a {@link com.bignerdranch.android.multiselector.SwappingHolder}, but without
- * any background swapping, so if you want to implement {@link com.bignerdranch.android.multiselector.SelectableHolder},
- * this is usually the best place to start.
+ * any background swapping. If you want to implement {@link com.bignerdranch.android.multiselector.SelectableHolder},
+ * this is usually the best place to start.</p>
  */
 public abstract class MultiSelectorBindingHolder extends RebindReportingHolder implements SelectableHolder {
     private final MultiSelector mMultiSelector;

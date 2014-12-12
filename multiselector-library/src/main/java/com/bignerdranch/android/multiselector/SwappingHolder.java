@@ -13,36 +13,36 @@ import android.util.TypedValue;
 import android.view.View;
 
 /**
+ * <p>
  * A holder extended to support having a selectable mode with a different
- * background and state list animator.
+ * background and state list animator.</p>
  *
- * When {@link #setSelectable(boolean)} is set to true, itemView's
+ * <p>When {@link #setSelectable(boolean)} is set to true, itemView's
  * background is set to the value of selectionModeBackgroundDrawable,
  * and its StateListAnimator is set to selectionModeStateListAnimator.
  * When it is set to false, the defaultModeBackgroundDrawable and
- * defaultModeStateListAnimator are used.
+ * defaultModeStateListAnimator are used.</p>
  *
- * defaultModeBackgroundDrawable and defaultModeStateListAnimator
- * default to the values on itemView at the time the holder was constructed.
+ * <p>defaultModeBackgroundDrawable and defaultModeStateListAnimator
+ * default to the values on itemView at the time the holder was constructed.</p>
  *
- * selectionModeBackgroundDrawable defaults to a StateListDrawable that displays
+ * <p>selectionModeBackgroundDrawable defaults to a StateListDrawable that displays
  * your colorAccent theme color when state_activated=true, and nothing otherwise.
  * selectionModeStateListAnimator defaults to a raise animation that animates selection
- * items to a 12dp translationZ.
+ * items to a 12dp translationZ.</p>
  *
- * (Thanks to Kurt Nelson for examples and discussion on approaches here.
- * @see <a href="https://github.com/kurtisnelson/">https://github.com/kurtisnelson/</a>)
+ * <p>(Thanks to <a href="https://github.com/kurtisnelson/">Kurt Nelson</a> for examples and discussion on approaches here.)</p>
  */
 public class SwappingHolder extends MultiSelectorBindingHolder implements SelectableHolder {
     /**
-     * Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.
+     * <p>Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.</p>
      *
-     * If the MultiSelector is not null, the SelectableHolder can be selected by
-     * calling {@link com.bignerdranch.android.multiselector.MultiSelector#setSelected(com.bignerdranch.android.multiselector.SelectableHolder, boolean)}.
+     * <p>If the MultiSelector is not null, the SelectableHolder can be selected by
+     * calling {@link com.bignerdranch.android.multiselector.MultiSelector#setSelected(com.bignerdranch.android.multiselector.SelectableHolder, boolean)}.</p>
      *
-     * If the MultiSelector is null, the SelectableHolder acts as a standalone
+     * <p>If the MultiSelector is null, the SelectableHolder acts as a standalone
      * ViewHolder that you can control manually by setting {@link #setSelectable(boolean)}
-     * and {@link #setActivated(boolean)}
+     * and {@link #setActivated(boolean)}</p>
      *
      * @param itemView Item view for this ViewHolder
      * @param multiSelector A selector set to bind this holder to
@@ -64,11 +64,10 @@ public class SwappingHolder extends MultiSelectorBindingHolder implements Select
     }
 
     /**
-     * Construct a new standalone SelectableHolder.
+     * <p>Construct a new standalone SelectableHolder.</p>
      *
-     * Selectable state can be controlled manually by setting {@link #setSelectable(boolean)}.
+     * <p>Selectable state can be controlled manually by setting {@link #setSelectable(boolean)}.</p>
      *
-     * and {@link #setActivated(boolean)}
      *
      * @param itemView Item view for this ViewHolder
      */
@@ -86,9 +85,10 @@ public class SwappingHolder extends MultiSelectorBindingHolder implements Select
     private StateListAnimator mDefaultModeStateListAnimator;
 
     /**
-     * Background drawable to use in selection mode. This defaults to
+     * <p>Background drawable to use in selection mode. This defaults to
      * a state list drawable that uses the colorAccent theme value when
-     * <code>state_activated==true</code>.
+     * <code>state_activated==true</code>.</p>
+     *
      * @return A background drawable
      */
     public Drawable getSelectionModeBackgroundDrawable() {
@@ -96,7 +96,7 @@ public class SwappingHolder extends MultiSelectorBindingHolder implements Select
     }
 
     /**
-     * Set the background drawable to be used in selection mode.
+     * <p>Set the background drawable to be used in selection mode.</p>
      * @param selectionModeBackgroundDrawable A background drawable
      */
     public void setSelectionModeBackgroundDrawable(Drawable selectionModeBackgroundDrawable) {
@@ -108,8 +108,8 @@ public class SwappingHolder extends MultiSelectorBindingHolder implements Select
     }
 
     /**
-     * Background drawable to use when not in selection mode. This defaults
-     * to the drawable that was set on {@link #itemView} at construction time.
+     * <p>Background drawable to use when not in selection mode. This defaults
+     * to the drawable that was set on {@link #itemView} at construction time.</p>
      * @return A background drawable
      */
     public Drawable getDefaultModeBackgroundDrawable() {
@@ -117,7 +117,7 @@ public class SwappingHolder extends MultiSelectorBindingHolder implements Select
     }
 
     /**
-     * Set the background drawable to use when not in selection mode.
+     * <p>Set the background drawable to use when not in selection mode.</p>
      * @param defaultModeBackgroundDrawable A background drawable
      */
     public void setDefaultModeBackgroundDrawable(Drawable defaultModeBackgroundDrawable) {
@@ -129,8 +129,8 @@ public class SwappingHolder extends MultiSelectorBindingHolder implements Select
     }
 
     /**
-     * State list animator to use when in selection mode. This defaults
-     * to an animator that raises the view when <code>state_activated==true</code>.
+     * <p>State list animator to use when in selection mode. This defaults
+     * to an animator that raises the view when <code>state_activated==true</code>.</p>
      * @return A state list animator
      */
     public StateListAnimator getSelectionModeStateListAnimator() {
@@ -138,8 +138,8 @@ public class SwappingHolder extends MultiSelectorBindingHolder implements Select
     }
 
     /**
-     * Set the state list animator to use when in selection mode. If not run
-     * on a Lollipop device, this method is a no-op.
+     * <p>Set the state list animator to use when in selection mode. If not run
+     * on a Lollipop device, this method is a no-op.</p>
      * @param resId A state list animator resource id. Ignored prior to Lollipop.
      */
     public void setSelectionModeStateListAnimator(int resId) {
@@ -193,7 +193,9 @@ public class SwappingHolder extends MultiSelectorBindingHolder implements Select
 
     }
     /**
-     * Calls through to {@link #itemView#setActivated}.
+     * Activate/select this holder.
+     *
+     * Calls through to {@link android.view.View#isActivated()} on {@link #itemView}.
      *
      * @param isActivated True to activate the view.
      */
@@ -202,7 +204,10 @@ public class SwappingHolder extends MultiSelectorBindingHolder implements Select
     }
 
     /**
-     * Calls through to {@link #itemView#isActivated}.
+     * Whether this holder is currently activated/selected.
+     *
+     * Calls through to {@link View#setActivated(boolean)} on {@link #itemView}.
+     *
      * @return True if the view is activated.
      */
     public boolean isActivated() {

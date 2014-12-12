@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A class that handles selection logic and dispatches updates to
- * connected instances of {@link com.bignerdranch.android.multiselector.SelectableHolder}.
+ * <p>A class that handles selection logic and dispatches updates to
+ * connected instances of {@link com.bignerdranch.android.multiselector.SelectableHolder}.</p>
  *
- * The out-of-the-box use of MultiSelector is to team it up with {@link com.bignerdranch.android.multiselector.SwappingHolder}
- * for easy selection functionality in {@link android.support.v7.widget.RecyclerView}s. Like this:
- *
+ * <p>The out-of-the-box use of MultiSelector is to team it up with {@link com.bignerdranch.android.multiselector.SwappingHolder}
+ * for easy selection functionality in {@link android.support.v7.widget.RecyclerView}s. Like this:</p>
+ * <pre>
  * {@code
  *
  * private MultiSelector mMultiSelector = new MultiSelector();
@@ -29,7 +29,8 @@ import java.util.List;
  *         }
  *     }
  * }
- *
+ * }
+ * </pre>
  */
 public class MultiSelector {
     private SparseBooleanArray mSelections = new SparseBooleanArray();
@@ -38,9 +39,9 @@ public class MultiSelector {
     private boolean mIsSelectable;
 
     /**
-     * Toggle whether this MultiSelector is in selection mode or not.
+     * <p>Toggle whether this MultiSelector is in selection mode or not.
      * {@link com.bignerdranch.android.multiselector.SelectableHolder#setSelectable(boolean)}
-     * will be called on any attached holders as well.
+     * will be called on any attached holders as well.</p>
      * @param isSelectable True if in selection mode.
      */
     public void setSelectable(boolean isSelectable) {
@@ -49,7 +50,7 @@ public class MultiSelector {
     }
 
     /**
-     * Current value of selectable.
+     * <p>Current value of selectable.</p>
      * @return True if in selection mode.
      */
     public boolean isSelectable() {
@@ -57,7 +58,7 @@ public class MultiSelector {
     }
 
     /**
-     * Calls through to {@link #setSelected(int, long, boolean)}.
+     * <p>Calls through to {@link #setSelected(int, long, boolean)}.</p>
      *
      * @param holder Holder to set selection value for.
      * @param isSelected Whether the item should be selected.
@@ -67,12 +68,12 @@ public class MultiSelector {
     }
 
     /**
-     * Sets whether a particular item is selected. In this implementation, id is
-     * ignored, but subclasses may use id instead.
+     * <p>Sets whether a particular item is selected. In this implementation, id is
+     * ignored, but subclasses may use id instead.</p>
      *
-     * If a holder is bound for this position, this will call through to
+     * <p>If a holder is bound for this position, this will call through to
      * {@link com.bignerdranch.android.multiselector.SelectableHolder#setActivated(boolean)}
-     * for that holder.
+     * for that holder.</p>
      *
      * @param position Position to select/unselect.
      * @param id Item id to select/unselect. Ignored in this implementation.
@@ -84,7 +85,7 @@ public class MultiSelector {
     }
 
     /**
-     * Returns whether a particular item is selected.
+     * <p>Returns whether a particular item is selected.</p>
      *
      * @param position The position to test selection for.
      * @param id Item id to select/unselect. Ignored in this implementation.
@@ -95,8 +96,8 @@ public class MultiSelector {
     }
 
     /**
-     * Sets selected to false for all positions. Will refresh
-     * all bound holders.
+     * <p>Sets selected to false for all positions. Will refresh
+     * all bound holders.</p>
      */
     public void clearSelections() {
         mSelections.clear();
@@ -104,7 +105,7 @@ public class MultiSelector {
     }
 
     /**
-     * Return a list of selected positions.
+     * <p>Return a list of selected positions.</p>
      *
      * @return A list of the currently selected positions.
      */
@@ -121,16 +122,16 @@ public class MultiSelector {
     }
 
     /**
-     * Bind a holder to a specific position/id. This implementation ignores the id.
+     * <p>Bind a holder to a specific position/id. This implementation ignores the id.</p>
      *
-     * Bound holders will receive calls to {@link com.bignerdranch.android.multiselector.SelectableHolder#setSelectable(boolean)}
+     * <p>Bound holders will receive calls to {@link com.bignerdranch.android.multiselector.SelectableHolder#setSelectable(boolean)}
      * and {@link com.bignerdranch.android.multiselector.SelectableHolder#setActivated(boolean)} when
      * {@link #setSelectable(boolean)} is called, or when {@link #setSelected(int, long, boolean)} is called for the
-     * associated position, respectively.
+     * associated position, respectively.</p>
      *
-     * @param holder
-     * @param position
-     * @param id
+     * @param holder A holder to bind.
+     * @param position Position the holder will be bound to.
+     * @param id Item id the holder will be bound to. Ignored in this implementation.
      */
     public void bindHolder(SelectableHolder holder, int position, long id) {
         mTracker.bindHolder(holder, position);
@@ -138,7 +139,7 @@ public class MultiSelector {
     }
 
     /**
-     * Calls through to {@link #tapSelection(int, long)}.
+     * <p>Calls through to {@link #tapSelection(int, long)}.</p>
      * @param holder The holder to tap.
      * @return True if {@link #isSelectable()} and selection was toggled for this item.
      */
@@ -147,13 +148,13 @@ public class MultiSelector {
     }
 
     /**
-     * Convenience method to ease invoking selection logic.
+     * <p>Convenience method to ease invoking selection logic.
      * If {@link #isSelectable()} is true, this method toggles selection
      * for the specified item and returns true. Otherwise, it returns false
-     * and does nothing.
+     * and does nothing.</p>
      *
-     * Equivalent to:
-     *
+     * <p>Equivalent to:</p>
+     * <pre>
      * {@code
      * if (multiSelector.isSelectable()) {
      *     boolean isSelected = isSelected(position, itemId);
@@ -163,6 +164,8 @@ public class MultiSelector {
      *     return false;
      * }
      * }
+     * </pre>
+     *
      * @param position Position to tap.
      * @param itemId Item id to tap. Ignored in this implementation.
      * @return True if the item was toggled.
