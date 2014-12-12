@@ -1,1 +1,1 @@
-include ':app', ':recyclerview-multiselect'
+include ':criminalintent-sample', ':recyclerview-multiselect'
