@@ -1,4 +1,9 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+version 0.1
+group 'com.bignerdranch.android'
 
 android {
     compileSdkVersion 21
@@ -8,7 +13,7 @@ android {
         minSdkVersion 11
         targetSdkVersion 21
         versionCode 1
-        versionName "1.0"
+        versionName project.version.toString()
     }
     buildTypes {
         release {
@@ -19,6 +24,54 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment ->
+                Console console = System.console()
+                console.printf "\n\nTime to sign your POM file.\n\n"
+
+                def password = console.readPassword("PGP Private Key Password: ")
+                allprojects { ext."signing.password" = password }
+
+                signing.signPom(deployment)
+            }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'RecyclerView MultiSelect'
+                description 'An Android library that handles displaying and managing selections in RecyclerView.'
+
+                url 'https://bignerdranch.github.io/recyclerview-multiselect/'
+
+                scm {
+                    url 'https://github.com/bignerdranch/recyclerview-multiselect'
+                    connection 'scm:git:https://github.com/bignerdranch/recyclerview-multiselect.git'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT License'
+                        url 'http://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'jingibus'
+                        name 'Bill Phillips'
+                        email 'phillips@bignerdranch.com'
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -39,6 +92,6 @@ android.libraryVariants.all { variant ->
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:recyclerview-v7:+'
+    compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.android.support:appcompat-v7:21.0.0'
 }
