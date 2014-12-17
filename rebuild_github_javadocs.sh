@@ -8,12 +8,15 @@ JAVADOCS=recyclerview-multiselect/build/docs/javadoc
 TEMP_FOLDER=/tmp/$(basename $JAVADOCS).$$.tmp
 
 rm -rf $TEMP_FOLDER
+mkdir $TEMP_FOLDER
 
 echo 'Building javadocs...'
 
 ./gradlew generateReleaseJavadoc
 
-mv $JAVADOCS $TEMP_FOLDER 
+pandoc README.md -o $TEMP_FOLDER/index.html
+
+mv $JAVADOCS $TEMP_FOLDER/javadocs
 
 echo "Switching to $PUBLISH_BRANCH..."
 
