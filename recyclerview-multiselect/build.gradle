@@ -2,8 +2,10 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-version 0.1
+version '0.1'
 group 'com.bignerdranch.android'
+
+def isSnapshot = version.endsWith('-SNAPSHOT')
 
 android {
     compileSdkVersion 21
@@ -27,16 +29,16 @@ android {
     }
 }
 
+    signing {
+        required { !isSnapshot && gradle.taskGraph.hasTask("uploadArchives") }
+
+        sign configurations.archives
+    }
+
 uploadArchives {
     repositories {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment ->
-                Console console = System.console()
-                console.printf "\n\nTime to sign your POM file.\n\n"
-
-                def password = console.readPassword("PGP Private Key Password: ")
-                allprojects { ext."signing.password" = password }
-
                 signing.signPom(deployment)
             }
 
@@ -45,6 +47,7 @@ uploadArchives {
             }
 
             pom.project {
+                packaging 'aar'
                 name 'RecyclerView MultiSelect'
                 description 'An Android library that handles displaying and managing selections in RecyclerView.'
 
