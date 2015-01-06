@@ -119,7 +119,7 @@ public class CrimeListFragment extends BaseFragment {
                     // not after. No idea why, but it crashes.
                     actionMode.finish();
 
-                    for (int i = mCrimes.size(); i > 0; i--) {
+                    for (int i = mCrimes.size()-1; i >= 0; i--) {
                         if (mMultiSelector.isSelected(i, 0)) {
                             Crime crime = mCrimes.get(i);
                             CrimeLab.get(getActivity()).deleteCrime(crime);
