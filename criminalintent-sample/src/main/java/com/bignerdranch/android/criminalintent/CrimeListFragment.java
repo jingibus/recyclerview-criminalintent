@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -18,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 public class CrimeListFragment extends BaseFragment {
 
     private RecyclerView mRecyclerView;
-
+    private static final String TAG="crimeListFragment";
     private MultiSelector mMultiSelector = new MultiSelector();
 
     private ArrayList<Crime> mCrimes;
@@ -118,7 +119,7 @@ public class CrimeListFragment extends BaseFragment {
                     // not after. No idea why, but it crashes.
                     actionMode.finish();
 
-                    for (int i = mCrimes.size(); i > 0; i--) {
+                    for (int i = mCrimes.size(); i >= 0; i--) {
                         if (mMultiSelector.isSelected(i, 0)) {
                             Crime crime = mCrimes.get(i);
                             CrimeLab.get(getActivity()).deleteCrime(crime);
@@ -234,6 +235,7 @@ public class CrimeListFragment extends BaseFragment {
         public void onBindViewHolder(CrimeHolder holder, int pos) {
             Crime crime = mCrimes.get(pos);
             holder.bindCrime(crime);
+            Log.d(TAG,"binding crime"+crime+"at position"+pos);
         }
 
         @Override
