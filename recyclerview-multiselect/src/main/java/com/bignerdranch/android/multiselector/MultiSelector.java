@@ -35,8 +35,7 @@ import java.util.List;
 public class MultiSelector {
     private SparseBooleanArray mSelections = new SparseBooleanArray();
     private WeakHolderTracker mTracker = new WeakHolderTracker();
-
-    private boolean mIsSelectable;
+     private boolean mIsSelectable;
 
     /**
      * <p>Toggle whether this MultiSelector is in selection mode or not.
@@ -196,4 +195,6 @@ public class MultiSelector {
         boolean isActivated = mSelections.get(holder.getPosition());
         holder.setActivated(isActivated);
     }
+
+
 }

@@ -28,15 +28,15 @@ import com.bignerdranch.android.multiselector.SwappingHolder;
 
 import java.util.ArrayList;
 
-public class CrimeListFragment extends BaseFragment {
-
+public class CrimeListFragment extends BaseFragment { 
     private RecyclerView mRecyclerView;
     private static final String TAG="crimeListFragment";
     private MultiSelector mMultiSelector = new MultiSelector();
-
-    private ArrayList<Crime> mCrimes;
+     private ArrayList<Crime> mCrimes;
     private boolean mSubtitleVisible;
-    
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,12 +46,33 @@ public class CrimeListFragment extends BaseFragment {
         mSubtitleVisible = false;
     }
 
+    /**
+     *  Note: since the fragment is retained. the bundle passed in after state is restored is null.
+     *  THe only way to pass parcelable objects is through the activities onsavedInstanceState and appropiate startup lifecycle
+     *  However after having second thoughts, since the fragment is retained then all the states and instance variables are
+     *  retained as well. no need to make the selection states percelable therefore just check for the selectionstate
+     *  from the multiselector
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(mMultiSelector.isSelectable()){
+            if(mDeleteMode !=null){
+                mDeleteMode.setClearOnPrepare(!mDeleteMode.shouldClearOnPrepare());
+                beginActionMode();
+
+
+            }
+
+        }
+    }
+
     @TargetApi(11)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recyclerview, parent, false);
 
-        if (mSubtitleVisible) {
+         if (mSubtitleVisible) {
             getActionBar().setSubtitle(R.string.subtitle);
         }
 
@@ -59,7 +80,6 @@ public class CrimeListFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mCrimes = CrimeLab.get(getActivity()).getCrimes();
         mRecyclerView.setAdapter(new CrimeAdapter());
-
 
         return v;
     }
@@ -103,7 +123,7 @@ public class CrimeListFragment extends BaseFragment {
         }
     }
 
-    private ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
+    private ModalMultiSelectorCallback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
@@ -179,8 +199,7 @@ public class CrimeListFragment extends BaseFragment {
     }
 
 
-    private class CrimeHolder extends SwappingHolder
-            implements View.OnClickListener, View.OnLongClickListener {
+    private class CrimeHolder extends SwappingHolder  {
         private final TextView mTitleTextView;
         private final TextView mDateTextView;
         private final CheckBox mSolvedCheckBox;
@@ -193,8 +212,7 @@ public class CrimeListFragment extends BaseFragment {
             mDateTextView = (TextView) itemView.findViewById(R.id.crime_list_item_dateTextView);
             mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.crime_list_item_solvedCheckBox);
             itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
-            itemView.setLongClickable(true);
+
         }
 
         public void bindCrime(Crime crime) {
@@ -206,21 +224,28 @@ public class CrimeListFragment extends BaseFragment {
 
         @Override
         public void onClick(View v) {
-            if (mCrime == null) {
+            super.onClick(v);
+            if (mCrime == null || mMultiSelector.isSelectable()) {
                 return;
             }
-            if (!mMultiSelector.tapSelection(this)) {
-                selectCrime(mCrime);
-            }
+
+            selectCrime(mCrime);
+
         }
 
         @Override
-        public boolean onLongClick(View v) {
-            ActionBarActivity activity = (ActionBarActivity)getActivity();
-            activity.startSupportActionMode(mDeleteMode);
-            mMultiSelector.setSelected(this, true);
-            return true;
+        public void beginSelectionActionMode() {
+            beginActionMode();
+
         }
+
+
+    }
+
+    private void beginActionMode() {
+        ActionBarActivity activity = (ActionBarActivity)getActivity();
+        activity.startSupportActionMode(mDeleteMode);
+
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {

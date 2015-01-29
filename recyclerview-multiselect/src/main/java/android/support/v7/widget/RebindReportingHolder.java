@@ -46,8 +46,13 @@ public abstract class RebindReportingHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    /**
+     * check if the view is due for rebiding
+     * @param flag
+     * @return
+     */
     private static boolean isRelevantFlagSet(int flag) {
-        for (Integer value : new int[] { FLAG_BOUND, FLAG_CHANGED, FLAG_UPDATE, FLAG_RETURNED_FROM_SCRAP }) {
+        for (Integer value : new int[] { FLAG_BOUND, FLAG_CHANGED, FLAG_UPDATE, FLAG_RETURNED_FROM_SCRAP ,FLAG_TMP_DETACHED}) {
             if ((flag & value) == value) {
                 return true;
             }

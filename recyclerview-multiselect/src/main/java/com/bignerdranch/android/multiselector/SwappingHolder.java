@@ -33,8 +33,8 @@ import android.view.View;
  *
  * <p>(Thanks to <a href="https://github.com/kurtisnelson/">Kurt Nelson</a> for examples and discussion on approaches here.)</p>
  */
-public class SwappingHolder extends MultiSelectorBindingHolder implements SelectableHolder {
-    /**
+public abstract class SwappingHolder extends MultiSelectorBindingHolder implements SelectableHolder,View.OnClickListener, View.OnLongClickListener {
+     /**
      * <p>Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.</p>
      *
      * <p>If the MultiSelector is not null, the SelectableHolder can be selected by
@@ -49,7 +49,8 @@ public class SwappingHolder extends MultiSelectorBindingHolder implements Select
      */
     public SwappingHolder(View itemView, MultiSelector multiSelector) {
         super(itemView, multiSelector);
-
+        this.itemView.setOnLongClickListener(this);
+        this.itemView.setLongClickable(true);
         mMultiSelector = multiSelector;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setSelectionModeStateListAnimator(getRaiseStateListAnimator(itemView.getContext()));
@@ -284,4 +285,29 @@ public class SwappingHolder extends MultiSelectorBindingHolder implements Select
             return null;
         }
     }
+
+    /**
+     *  just few cleanup to handle click event
+     *  Note: subclass should   call super.onClick before implementation of their onClick
+     */
+    @Override
+    public void onClick(View v) {
+        if (!mMultiSelector.tapSelection(this)) {
+            return;
+        }
+    }
+
+    /**
+     *
+     *
+     *  just few cleanup to handle starting up the selection mode
+     *  Note: subclass should   call super.onLongClick before implementation of their onLongClick
+     */
+    @Override
+    public boolean onLongClick(View v) {
+        beginSelectionActionMode();
+        mMultiSelector.setSelected(this, true);
+        return true;
+    }
+    public abstract void beginSelectionActionMode();
 }
