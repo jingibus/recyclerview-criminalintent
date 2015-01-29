@@ -7,6 +7,16 @@ group 'com.bignerdranch.android'
 
 def isSnapshot = version.endsWith('-SNAPSHOT')
 
+
+// For upload to maven central with uploadArchives task, define these values in
+// gradle.properties.
+def ossrhUsername = hasProperty('ossrhUsername') ?
+        getProperty('ossrhUsername') :
+        'dummyUsername'
+def ossrhPassword = hasProperty('ossrhPassword') ?
+        getProperty('ossrhPassword') :
+        'dummyPassword'
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.0.2"
