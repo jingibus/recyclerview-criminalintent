@@ -35,8 +35,7 @@ import java.util.List;
 public class MultiSelector {
     private SparseBooleanArray mSelections = new SparseBooleanArray();
     private WeakHolderTracker mTracker = new WeakHolderTracker();
-     private boolean mIsSelectable;
-
+    private boolean mIsSelectable;
     /**
      * <p>Toggle whether this MultiSelector is in selection mode or not.
      * {@link com.bignerdranch.android.multiselector.SelectableHolder#setSelectable(boolean)}

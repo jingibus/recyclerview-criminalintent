@@ -61,7 +61,6 @@ public class CrimeListFragment extends BaseFragment {
                 mDeleteMode.setClearOnPrepare(!mDeleteMode.shouldClearOnPrepare());
                 beginActionMode();
 
-
             }
 
         }
@@ -236,16 +235,16 @@ public class CrimeListFragment extends BaseFragment {
         @Override
         public void beginSelectionActionMode() {
             beginActionMode();
-
         }
 
 
     }
 
+
+
     private void beginActionMode() {
         ActionBarActivity activity = (ActionBarActivity)getActivity();
         activity.startSupportActionMode(mDeleteMode);
-
     }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
