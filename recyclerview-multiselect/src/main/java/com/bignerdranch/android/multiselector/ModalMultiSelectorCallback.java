@@ -11,8 +11,9 @@ import android.view.Menu;
  * and {@link android.support.v7.view.ActionMode.Callback#onDestroyActionMode(android.support.v7.view.ActionMode)}.</p>
  */
 public abstract class ModalMultiSelectorCallback implements ActionMode.Callback {
-    private MultiSelector mMultiSelector;
 
+    private MultiSelector mMultiSelector;
+    private static final String TAG="modalMultiSelectorCallback";
     private boolean mClearOnPrepare = true;
 
     public ModalMultiSelectorCallback(MultiSelector multiSelector) {
@@ -66,4 +67,7 @@ public abstract class ModalMultiSelectorCallback implements ActionMode.Callback 
     public void onDestroyActionMode(ActionMode actionMode) {
         mMultiSelector.setSelectable(false);
     }
+
+
+
 }

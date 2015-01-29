@@ -1,5 +1,6 @@
 package com.bignerdranch.android.multiselector;
 
+import android.content.Context;
 import android.util.SparseBooleanArray;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ import java.util.List;
 public class MultiSelector {
     private SparseBooleanArray mSelections = new SparseBooleanArray();
     private WeakHolderTracker mTracker = new WeakHolderTracker();
-
+    private Context mAppContext;
     private boolean mIsSelectable;
 
     /**
@@ -196,4 +197,6 @@ public class MultiSelector {
         boolean isActivated = mSelections.get(holder.getPosition());
         holder.setActivated(isActivated);
     }
+
+
 }
