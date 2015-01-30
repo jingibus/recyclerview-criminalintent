@@ -58,7 +58,7 @@ public class CrimeListFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         if(mMultiSelector.isSelectable()){
             if(mDeleteMode !=null){
-                mDeleteMode.setClearOnPrepare(!mDeleteMode.shouldClearOnPrepare());
+                mDeleteMode.setClearOnPrepare(false);
                 beginActionMode();
 
             }
