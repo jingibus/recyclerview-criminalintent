@@ -29,113 +29,9 @@ import com.bignerdranch.android.multiselector.SwappingHolder;
 import java.util.ArrayList;
 
 public class CrimeListFragment extends BaseFragment { 
-    private RecyclerView mRecyclerView;
     private static final String TAG="crimeListFragment";
+    private RecyclerView mRecyclerView;
     private MultiSelector mMultiSelector = new MultiSelector();
-     private ArrayList<Crime> mCrimes;
-    private boolean mSubtitleVisible;
-
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        getActivity().setTitle(R.string.crimes_title);
-        //setRetainInstance(true);
-        mSubtitleVisible = false;
-    }
-
-    /**
-     *  Note: since the fragment is retained. the bundle passed in after state is restored is null.
-     *  THe only way to pass parcelable objects is through the activities onsavedInstanceState and appropiate startup lifecycle
-     *  However after having second thoughts, since the fragment is retained then all the states and instance variables are
-     *  retained as well. no need to make the selection states percelable therefore just check for the selectionstate
-     *  from the multiselector
-     */
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-
-        if( mMultiSelector==null)return;
-
-            Bundle bundle=savedInstanceState;
-            if(bundle!=null)  mMultiSelector=bundle.getParcelable(MultiSelector.TAG);
-
-        if(mMultiSelector.isSelectable()){
-                if(mDeleteMode !=null){
-                    mDeleteMode.setClearOnPrepare(false);
-                    beginActionMode();
-
-                }
-
-            }
-
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(MultiSelector.TAG,mMultiSelector);
-        super.onSaveInstanceState(outState);
-    }
-
-
-    @TargetApi(11)
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_recyclerview, parent, false);
-
-         if (mSubtitleVisible) {
-            getActionBar().setSubtitle(R.string.subtitle);
-        }
-
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mCrimes = CrimeLab.get(getActivity()).getCrimes();
-        mRecyclerView.setAdapter(new CrimeAdapter());
-
-        return v;
-    }
-
-    private void selectCrime(Crime c) {
-        // start an instance of CrimePagerActivity
-        Intent i = new Intent(getActivity(), CrimePagerActivity.class);
-        i.putExtra(CrimeFragment.EXTRA_CRIME_ID, c.getId());
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // NOTE: shared element transition here.
-            // Support library fragments do not support the three parameter
-            // startActivityForResult call. So to get this to work, the entire
-            // project had to be shifted over to use stdlib fragments,
-            // and the v13 ViewPager.
-            int index = mCrimes.indexOf(c);
-            CrimeHolder holder = (CrimeHolder)mRecyclerView
-                    .findViewHolderForPosition(index);
-
-            ActivityOptions options = CrimePagerActivity.getTransition(
-                    getActivity(), holder.itemView);
-
-            startActivityForResult(i, 0, options.toBundle());
-        } else {
-            startActivityForResult(i, 0);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mRecyclerView.getAdapter().notifyDataSetChanged();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_crime_list, menu);
-        MenuItem showSubtitle = menu.findItem(R.id.menu_item_show_subtitle);
-        if (mSubtitleVisible && showSubtitle != null) {
-            showSubtitle.setTitle(R.string.hide_subtitle);
-        }
-    }
-
     private ModalMultiSelectorCallback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
 
         @Override
@@ -168,6 +64,105 @@ public class CrimeListFragment extends BaseFragment {
             return false;
         }
     };
+     private ArrayList<Crime> mCrimes;
+    private boolean mSubtitleVisible;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        getActivity().setTitle(R.string.crimes_title);
+        //setRetainInstance(true);
+        mSubtitleVisible = false;
+    }
+
+    /**
+     * Note: since the fragment is retained. the bundle passed in after state is restored is null.
+     * THe only way to pass parcelable objects is through the activities onsavedInstanceState and appropiate startup lifecycle
+     * However after having second thoughts, since the fragment is retained then all the states and instance variables are
+     * retained as well. no need to make the selection states percelable therefore just check for the selectionstate
+     * from the multiselector
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+
+        if (mMultiSelector != null) {
+            Bundle bundle = savedInstanceState;
+            if (bundle != null) mMultiSelector = bundle.getParcelable(MultiSelector.TAG);
+
+            if (mMultiSelector.isSelectable()) {
+                if (mDeleteMode != null) {
+                    mDeleteMode.setClearOnPrepare(false);
+                    mMultiSelector.startSupportSelectionWithActionMode((ActionBarActivity) getActivity(), mDeleteMode);
+                }
+
+            }
+        }
+
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(MultiSelector.TAG, mMultiSelector);
+        super.onSaveInstanceState(outState);
+    }
+
+    @TargetApi(11)
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_recyclerview, parent, false);
+
+        if (mSubtitleVisible) {
+            getActionBar().setSubtitle(R.string.subtitle);
+        }
+
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mCrimes = CrimeLab.get(getActivity()).getCrimes();
+        mRecyclerView.setAdapter(new CrimeAdapter());
+
+        return v;
+    }
+
+    private void selectCrime(Crime c) {
+        // start an instance of CrimePagerActivity
+        Intent i = new Intent(getActivity(), CrimePagerActivity.class);
+        i.putExtra(CrimeFragment.EXTRA_CRIME_ID, c.getId());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // NOTE: shared element transition here.
+            // Support library fragments do not support the three parameter
+            // startActivityForResult call. So to get this to work, the entire
+            // project had to be shifted over to use stdlib fragments,
+            // and the v13 ViewPager.
+            int index = mCrimes.indexOf(c);
+            CrimeHolder holder = (CrimeHolder) mRecyclerView
+                    .findViewHolderForPosition(index);
+
+            ActivityOptions options = CrimePagerActivity.getTransition(
+                    getActivity(), holder.itemView);
+
+            startActivityForResult(i, 0, options.toBundle());
+        } else {
+            startActivityForResult(i, 0);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mRecyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_crime_list, menu);
+        MenuItem showSubtitle = menu.findItem(R.id.menu_item_show_subtitle);
+        if (mSubtitleVisible && showSubtitle != null) {
+            showSubtitle.setTitle(R.string.hide_subtitle);
+        }
+    }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -212,7 +207,7 @@ public class CrimeListFragment extends BaseFragment {
     }
 
 
-    private class CrimeHolder extends SwappingHolder  {
+    private class CrimeHolder extends SwappingHolder implements View.OnClickListener, View.OnLongClickListener {
         private final TextView mTitleTextView;
         private final TextView mDateTextView;
         private final CheckBox mSolvedCheckBox;
@@ -228,6 +223,7 @@ public class CrimeListFragment extends BaseFragment {
             itemView.setClickable(true);
             itemView.setOnLongClickListener(this);
 
+
         }
 
         public void bindCrime(Crime crime) {
@@ -239,29 +235,28 @@ public class CrimeListFragment extends BaseFragment {
 
         @Override
         public void onClick(View v) {
-            super.onClick(v);
-            if (mCrime == null || mMultiSelector.isSelectable()) {
+
+            if (mCrime == null) {
                 return;
             }
-
-            selectCrime(mCrime);
+            if (!mMultiSelector.tapSelection(this)) {
+                selectCrime(mCrime);
+            }
 
         }
+
 
         @Override
-        public void beginSelectionActionMode() {
-            beginActionMode();
+        public boolean onLongClick(View v) {
+
+            mMultiSelector.startSupportSelectionWithActionMode((ActionBarActivity) getActivity(), mDeleteMode);
+            mMultiSelector.selectAll(true);
+            return true;
         }
 
 
     }
 
-
-
-    private void beginActionMode() {
-        ActionBarActivity activity = (ActionBarActivity)getActivity();
-        activity.startSupportActionMode(mDeleteMode);
-    }
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
         @Override
