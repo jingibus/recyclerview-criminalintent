@@ -42,7 +42,7 @@ public class CrimeListFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         getActivity().setTitle(R.string.crimes_title);
-        setRetainInstance(true);
+        //setRetainInstance(true);
         mSubtitleVisible = false;
     }
 
@@ -55,16 +55,30 @@ public class CrimeListFragment extends BaseFragment {
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+
+        if( mMultiSelector==null)return;
+
+            Bundle bundle=savedInstanceState;
+            if(bundle!=null) mMultiSelector=bundle.getParcelable(MultiSelector.TAG);
+
         if(mMultiSelector.isSelectable()){
-            if(mDeleteMode !=null){
-                mDeleteMode.setClearOnPrepare(false);
-                beginActionMode();
+                if(mDeleteMode !=null){
+                    mDeleteMode.setClearOnPrepare(false);
+                    beginActionMode();
+
+                }
 
             }
 
-        }
+        super.onActivityCreated(savedInstanceState);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(MultiSelector.TAG,mMultiSelector);
+        super.onSaveInstanceState(outState);
+    }
+
 
     @TargetApi(11)
     @Override
@@ -211,6 +225,8 @@ public class CrimeListFragment extends BaseFragment {
             mDateTextView = (TextView) itemView.findViewById(R.id.crime_list_item_dateTextView);
             mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.crime_list_item_solvedCheckBox);
             itemView.setOnClickListener(this);
+            itemView.setClickable(true);
+            itemView.setOnLongClickListener(this);
 
         }
 

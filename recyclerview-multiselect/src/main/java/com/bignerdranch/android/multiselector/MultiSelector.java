@@ -1,5 +1,7 @@
 package com.bignerdranch.android.multiselector;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.SparseBooleanArray;
 
 import java.util.ArrayList;
@@ -32,10 +34,11 @@ import java.util.List;
  * }
  * </pre>
  */
-public class MultiSelector {
+public class MultiSelector implements Parcelable {
     private SparseBooleanArray mSelections = new SparseBooleanArray();
     private WeakHolderTracker mTracker = new WeakHolderTracker();
     private boolean mIsSelectable;
+    public static final String TAG="multiselector";
     /**
      * <p>Toggle whether this MultiSelector is in selection mode or not.
      * {@link com.bignerdranch.android.multiselector.SelectableHolder#setSelectable(boolean)}
@@ -196,4 +199,34 @@ public class MultiSelector {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeSparseBooleanArray(this.mSelections);
+        dest.writeParcelable(this.mTracker,flags);
+        dest.writeByte(mIsSelectable ? (byte) 1 : (byte) 0);//write the boolean in form of logical 0 or 1
+    }
+
+    public MultiSelector() {
+    }
+
+    private MultiSelector(Parcel in) {
+        this.mSelections = in.readSparseBooleanArray();
+        this.mTracker =   in.readParcelable(WeakHolderTracker.class.getClassLoader());
+        this.mIsSelectable = in.readByte() != 0;//retrieve the boolean information
+    }
+
+    public static final Parcelable.Creator<MultiSelector> CREATOR = new Parcelable.Creator<MultiSelector>() {
+        public MultiSelector createFromParcel(Parcel source) {
+            return new MultiSelector(source);
+        }
+
+        public MultiSelector[] newArray(int size) {
+            return new MultiSelector[size];
+        }
+    };
 }
