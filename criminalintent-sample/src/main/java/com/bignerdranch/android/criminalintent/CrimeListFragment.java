@@ -59,7 +59,7 @@ public class CrimeListFragment extends BaseFragment {
         if( mMultiSelector==null)return;
 
             Bundle bundle=savedInstanceState;
-            if(bundle!=null)  mMultiSelector=bundle.getParcelable(MultiSelector.TAG);
+        if(bundle!=null) mMultiSelector=bundle.getParcelable(MultiSelector.TAG);
 
         if(mMultiSelector.isSelectable()){
                 if(mDeleteMode !=null){
