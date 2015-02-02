@@ -34,11 +34,39 @@ import java.util.List;
  * }
  * </pre>
  */
-public class MultiSelector implements Parcelable {
+public class MultiSelector extends SelectionManager implements Parcelable {
+    public static final String TAG = "multiselector";
+    public static final Parcelable.Creator<MultiSelector> CREATOR = new Parcelable.Creator<MultiSelector>() {
+        public MultiSelector createFromParcel(Parcel source) {
+            return new MultiSelector(source);
+        }
+
+        public MultiSelector[] newArray(int size) {
+            return new MultiSelector[size];
+        }
+    };
     private SparseBooleanArray mSelections = new SparseBooleanArray();
     private WeakHolderTracker mTracker = new WeakHolderTracker();
     private boolean mIsSelectable;
-    public static final String TAG="multiselector";
+    private boolean mShdSelectAll;
+
+    public MultiSelector() {
+    }
+
+    private MultiSelector(Parcel in) {
+        this.mSelections = in.readSparseBooleanArray();
+        this.mTracker = in.readParcelable(WeakHolderTracker.class.getClassLoader());
+        this.mIsSelectable = in.readByte() != 0;//retrieve the boolean information
+    }
+
+    /**
+     * <p>Current value of selectable.</p>
+     * @return True if in selection mode.
+     */
+    public boolean isSelectable() {
+        return mIsSelectable;
+    }
+
     /**
      * <p>Toggle whether this MultiSelector is in selection mode or not.
      * {@link com.bignerdranch.android.multiselector.SelectableHolder#setSelectable(boolean)}
@@ -48,14 +76,6 @@ public class MultiSelector implements Parcelable {
     public void setSelectable(boolean isSelectable) {
         mIsSelectable = isSelectable;
         refreshAllHolders();
-    }
-
-    /**
-     * <p>Current value of selectable.</p>
-     * @return True if in selection mode.
-     */
-    public boolean isSelectable() {
-        return mIsSelectable;
     }
 
     /**
@@ -124,23 +144,25 @@ public class MultiSelector implements Parcelable {
 
     /**
      * <p>Bind a holder to a specific position/id. This implementation ignores the id.</p>
-     *
+     * <p/>
      * <p>Bound holders will receive calls to {@link com.bignerdranch.android.multiselector.SelectableHolder#setSelectable(boolean)}
      * and {@link com.bignerdranch.android.multiselector.SelectableHolder#setActivated(boolean)} when
      * {@link #setSelectable(boolean)} is called, or when {@link #setSelected(int, long, boolean)} is called for the
      * associated position, respectively.</p>
      *
-     * @param holder A holder to bind.
+     * @param holder   A holder to bind.
      * @param position Position the holder will be bound to.
-     * @param id Item id the holder will be bound to. Ignored in this implementation.
+     * @param id       Item id the holder will be bound to. Ignored in this implementation.
      */
     public void bindHolder(SelectableHolder holder, int position, long id) {
         mTracker.bindHolder(holder, position);
+        if (getShdSelectAll()) setSelected(holder, true);
         refreshHolder(holder);
     }
 
     /**
      * <p>Calls through to {@link #tapSelection(int, long)}.</p>
+     *
      * @param holder The holder to tap.
      * @return True if {@link #isSelectable()} and selection was toggled for this item.
      */
@@ -153,7 +175,7 @@ public class MultiSelector implements Parcelable {
      * If {@link #isSelectable()} is true, this method toggles selection
      * for the specified item and returns true. Otherwise, it returns false
      * and does nothing.</p>
-     *
+     * <p/>
      * <p>Equivalent to:</p>
      * <pre>
      * {@code
@@ -168,7 +190,7 @@ public class MultiSelector implements Parcelable {
      * </pre>
      *
      * @param position Position to tap.
-     * @param itemId Item id to tap. Ignored in this implementation.
+     * @param itemId   Item id to tap. Ignored in this implementation.
      * @return True if the item was toggled.
      */
     public boolean tapSelection(int position, long itemId) {
@@ -182,7 +204,7 @@ public class MultiSelector implements Parcelable {
 
     }
 
-    private void refreshAllHolders() {
+    public void refreshAllHolders() {
         for (SelectableHolder holder : mTracker.getTrackedHolders()) {
             refreshHolder(holder);
         }
@@ -198,7 +220,6 @@ public class MultiSelector implements Parcelable {
         holder.setActivated(isActivated);
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -207,26 +228,27 @@ public class MultiSelector implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeSparseBooleanArray(this.mSelections);
-        dest.writeParcelable(this.mTracker,flags);
+        dest.writeParcelable(this.mTracker, flags);
         dest.writeByte(mIsSelectable ? (byte) 1 : (byte) 0);//write the boolean in form of logical 0 or 1
     }
 
-    public MultiSelector() {
+    @Override
+    public void selectAll(boolean shdselectAll) {
+        this.mShdSelectAll = shdselectAll;
+        for (SelectableHolder holder : mTracker.getTrackedHolders()) {
+
+            setSelected(holder, shdselectAll);
+        }
+        return;
     }
 
-    private MultiSelector(Parcel in) {
-        this.mSelections = in.readSparseBooleanArray();
-        this.mTracker =   in.readParcelable(WeakHolderTracker.class.getClassLoader());
-        this.mIsSelectable = in.readByte() != 0;//retrieve the boolean information
+
+    public boolean getShdSelectAll() {
+        return mShdSelectAll;
     }
 
-    public static final Parcelable.Creator<MultiSelector> CREATOR = new Parcelable.Creator<MultiSelector>() {
-        public MultiSelector createFromParcel(Parcel source) {
-            return new MultiSelector(source);
-        }
 
-        public MultiSelector[] newArray(int size) {
-            return new MultiSelector[size];
-        }
-    };
+
+
+
 }
