@@ -1,15 +1,11 @@
 package com.bignerdranch.android.multiselector;
 
+import java.io.Serializable;
+
 /**
  * <p>Public interface used by selectable items connected to {@link com.bignerdranch.android.multiselector.MultiSelector}.</p>
  */
-public interface SelectableHolder {
-    /**
-     * <p>Turn selection mode on for this holder.</p>
-     * @param selectable True if selection mode is on.
-     */
-    void setSelectable(boolean selectable);
-
+public interface SelectableHolder extends Serializable {
     /**
      * <p>Current selection mode state.</p>
      * @return True if selection mode is on.
@@ -17,16 +13,22 @@ public interface SelectableHolder {
     boolean isSelectable();
 
     /**
-     * <p>Set this item to be selected (the activated state, for Views and Drawables)</p>
-     * @param activated True if selected/activated.
+     * <p>Turn selection mode on for this holder.</p>
+     * @param selectable True if selection mode is on.
      */
-    void setActivated(boolean activated);
+    void setSelectable(boolean selectable);
 
     /**
      * <p>Return true if the item is selected/activated.</p>
      * @return True if selected/activated.
      */
     boolean isActivated();
+
+    /**
+     * <p>Set this item to be selected (the activated state, for Views and Drawables)</p>
+     * @param activated True if selected/activated.
+     */
+    void setActivated(boolean activated);
 
     /**
      * <p>Returns the adapter position this item is currently bound to.

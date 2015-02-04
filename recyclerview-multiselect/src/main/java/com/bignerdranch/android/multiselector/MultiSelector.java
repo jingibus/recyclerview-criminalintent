@@ -1,7 +1,6 @@
 package com.bignerdranch.android.multiselector;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.os.Bundle;
 import android.util.SparseBooleanArray;
 
 import java.util.ArrayList;
@@ -34,29 +33,17 @@ import java.util.List;
  * }
  * </pre>
  */
-public class MultiSelector extends SelectionManager implements Parcelable {
+public class MultiSelector extends SelectionManager {
     public static final String TAG = "multiselector";
-    public static final Parcelable.Creator<MultiSelector> CREATOR = new Parcelable.Creator<MultiSelector>() {
-        public MultiSelector createFromParcel(Parcel source) {
-            return new MultiSelector(source);
-        }
-
-        public MultiSelector[] newArray(int size) {
-            return new MultiSelector[size];
-        }
-    };
+    private static final String SELECTION_POSITIONS = "position";
+    private static final String SELECTABLE_HOLDERS = "holders";
+    private static final String SELECTIONS_STATE = "state";
     private SparseBooleanArray mSelections = new SparseBooleanArray();
     private WeakHolderTracker mTracker = new WeakHolderTracker();
     private boolean mIsSelectable;
     private boolean mShdSelectAll;
 
     public MultiSelector() {
-    }
-
-    private MultiSelector(Parcel in) {
-        this.mSelections = in.readSparseBooleanArray();
-        this.mTracker = in.readParcelable(WeakHolderTracker.class.getClassLoader());
-        this.mIsSelectable = in.readByte() != 0;//retrieve the boolean information
     }
 
     /**
@@ -221,18 +208,6 @@ public class MultiSelector extends SelectionManager implements Parcelable {
     }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeSparseBooleanArray(this.mSelections);
-        dest.writeParcelable(this.mTracker, flags);
-        dest.writeByte(mIsSelectable ? (byte) 1 : (byte) 0);//write the boolean in form of logical 0 or 1
-    }
-
-    @Override
     public void selectAll(boolean shdselectAll) {
         this.mShdSelectAll = shdselectAll;
         for (SelectableHolder holder : mTracker.getTrackedHolders()) {
@@ -242,10 +217,53 @@ public class MultiSelector extends SelectionManager implements Parcelable {
         return;
     }
 
+    /**
+     * @return Bundle containing the states of the selection and a flag indicating if the multiselection is in
+     * selection mode or not
+     */
+    @Override
+    public Bundle saveSelectionStates() {
+        Bundle information = new Bundle();
+        information.putIntegerArrayList(SELECTION_POSITIONS, (ArrayList<Integer>) getSelectedPositions());
+        information.putSerializable(SELECTABLE_HOLDERS, (java.io.Serializable) mTracker.getTrackedHolders());
+        information.putBoolean(SELECTIONS_STATE, isSelectable());
+        return information;
+    }
 
+    /**
+     * restore the selection states of the multiselector and the ViewHolder Trackers
+     *
+     * @param savedStates
+     */
+    @Override
+    public void restoreSelectionStates(Bundle savedStates) {
+        List<Integer> selectedPositions = savedStates.getIntegerArrayList(SELECTION_POSITIONS);
+        List<SelectableHolder> selectableHolders = (List<SelectableHolder>) savedStates.getSerializable(SELECTABLE_HOLDERS);
+
+        //restore mTrackers
+        mTracker.setTrackedHolders(selectableHolders, selectedPositions);
+        //restore Multiselector Selections
+        restoreSelections(selectedPositions);
+        mIsSelectable = savedStates.getBoolean(SELECTIONS_STATE);
+
+    }
+
+    private void restoreSelections(List<Integer> selected) {
+        if (selected == null) return;
+        for (int i = 0; i < selected.size(); i++) {
+            mSelections.put(selected.get(i), true);
+        }
+    }
+
+
+    /**
+     * this is just a simple added functionalty just to toggle selection on all items in the view
+     * @return boolean indicating if the multiselector set to selectAll
+     */
     public boolean getShdSelectAll() {
         return mShdSelectAll;
     }
+
 
 
 

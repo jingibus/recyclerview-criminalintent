@@ -33,7 +33,7 @@ import android.view.View;
  * <p/>
  * <p>(Thanks to <a href="https://github.com/kurtisnelson/">Kurt Nelson</a> for examples and discussion on approaches here.)</p>
  */
-public abstract class SwappingHolder extends MultiSelectorBindingHolder implements SelectableHolder, View.OnClickListener, View.OnLongClickListener {
+public abstract class SwappingHolder extends MultiSelectorBindingHolder implements SelectableHolder {
     private MultiSelector mMultiSelector;
     private boolean mIsSelectable = false;
     private Drawable mSelectionModeBackgroundDrawable;

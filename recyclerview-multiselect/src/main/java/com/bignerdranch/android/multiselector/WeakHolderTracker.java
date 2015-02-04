@@ -1,15 +1,13 @@
 package com.bignerdranch.android.multiselector;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.SparseArray;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-class WeakHolderTracker implements Parcelable {
-    private SparseArray<WeakReferenceSelectableHolder<SelectableHolder>> mHoldersByPosition =
+class WeakHolderTracker {
+    private SparseArray<WeakReference<SelectableHolder>> mHoldersByPosition =
             new SparseArray<>();
 
     /**
@@ -34,7 +32,7 @@ class WeakHolderTracker implements Parcelable {
     }
 
     public void bindHolder(SelectableHolder holder, int position) {
-        mHoldersByPosition.put(position, new WeakReferenceSelectableHolder<SelectableHolder>(holder));
+        mHoldersByPosition.put(position, new WeakReference<>(holder));
     }
 
     public List<SelectableHolder> getTrackedHolders() {
@@ -52,31 +50,12 @@ class WeakHolderTracker implements Parcelable {
         return holders;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeSparseArray((SparseArray)this.mHoldersByPosition);
-    }
-
-    public WeakHolderTracker() {
-    }
-
-    private WeakHolderTracker(Parcel in) {
-
-        this.mHoldersByPosition = in.readSparseArray(SparseArray.class.getClassLoader());
-    }
-
-    public static final Parcelable.Creator<WeakHolderTracker> CREATOR = new Parcelable.Creator<WeakHolderTracker>() {
-        public WeakHolderTracker createFromParcel(Parcel source) {
-            return new WeakHolderTracker(source);
+    public void setTrackedHolders(List<SelectableHolder> selectableHolderList, List<Integer> positions) {
+        for (int i = 0; i < positions.size(); i++) {
+            SelectableHolder holder = selectableHolderList.get(positions.get(i));
+            bindHolder(holder, positions.get(i));
         }
 
-        public WeakHolderTracker[] newArray(int size) {
-            return new WeakHolderTracker[size];
-        }
-    };
+    }
+
 }
