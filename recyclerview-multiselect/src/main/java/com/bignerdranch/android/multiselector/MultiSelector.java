@@ -36,7 +36,6 @@ import java.util.List;
 public class MultiSelector extends SelectionManager {
     public static final String TAG = "multiselector";
     private static final String SELECTION_POSITIONS = "position";
-    private static final String SELECTABLE_HOLDERS = "holders";
     private static final String SELECTIONS_STATE = "state";
     private SparseBooleanArray mSelections = new SparseBooleanArray();
     private WeakHolderTracker mTracker = new WeakHolderTracker();
@@ -225,7 +224,6 @@ public class MultiSelector extends SelectionManager {
     public Bundle saveSelectionStates() {
         Bundle information = new Bundle();
         information.putIntegerArrayList(SELECTION_POSITIONS, (ArrayList<Integer>) getSelectedPositions());
-        information.putSerializable(SELECTABLE_HOLDERS, (java.io.Serializable) mTracker.getTrackedHolders());
         information.putBoolean(SELECTIONS_STATE, isSelectable());
         return information;
     }
@@ -238,20 +236,18 @@ public class MultiSelector extends SelectionManager {
     @Override
     public void restoreSelectionStates(Bundle savedStates) {
         List<Integer> selectedPositions = savedStates.getIntegerArrayList(SELECTION_POSITIONS);
-        List<SelectableHolder> selectableHolders = (List<SelectableHolder>) savedStates.getSerializable(SELECTABLE_HOLDERS);
-
-        //restore mTrackers
-        mTracker.setTrackedHolders(selectableHolders, selectedPositions);
-        //restore Multiselector Selections
-        restoreSelections(selectedPositions);
+         restoreSelections(selectedPositions);
         mIsSelectable = savedStates.getBoolean(SELECTIONS_STATE);
 
     }
 
     private void restoreSelections(List<Integer> selected) {
         if (selected == null) return;
+        int position;
         for (int i = 0; i < selected.size(); i++) {
-            mSelections.put(selected.get(i), true);
+            position = selected.get(i);
+            mSelections.put(position, true);
+            mTracker.bindHolder(mTracker.getHolder(position), position);
         }
     }
 

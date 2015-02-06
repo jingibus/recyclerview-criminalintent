@@ -252,7 +252,7 @@ public class CrimeListFragment extends BaseFragment {
         public boolean onLongClick(View v) {
 
             mMultiSelector.startSupportSelectionWithActionMode((ActionBarActivity) getActivity(), mDeleteMode);
-            mMultiSelector.selectAll(true);
+            mMultiSelector.setSelected(this,true);
             return true;
         }
 
