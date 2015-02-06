@@ -13,6 +13,7 @@ class WeakHolderTracker {
     /**
      * Returns the holder with a given position. If non-null, the returned
      * holder is guaranteed to have getPosition() == position.
+     *
      * @param position
      * @return
      */
@@ -50,12 +51,5 @@ class WeakHolderTracker {
         return holders;
     }
 
-    public void setTrackedHolders(List<SelectableHolder> selectableHolderList, List<Integer> positions) {
-        for (int i = 0; i < positions.size(); i++) {
-            SelectableHolder holder = selectableHolderList.get(positions.get(i));
-            bindHolder(holder, positions.get(i));
-        }
-
-    }
 
 }
