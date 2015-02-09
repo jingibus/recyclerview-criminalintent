@@ -1,11 +1,9 @@
 package com.bignerdranch.android.multiselector;
 
-import java.io.Serializable;
-
 /**
  * <p>Public interface used by selectable items connected to {@link com.bignerdranch.android.multiselector.MultiSelector}.</p>
  */
-public interface SelectableHolder extends Serializable {
+public interface SelectableHolder{
     /**
      * <p>Current selection mode state.</p>
      * @return True if selection mode is on.
