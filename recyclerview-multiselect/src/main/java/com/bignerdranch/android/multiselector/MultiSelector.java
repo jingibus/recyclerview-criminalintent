@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * <p>A class that handles selection logic and dispatches updates to
  * connected instances of {@link com.bignerdranch.android.multiselector.SelectableHolder}.</p>
- *
+ * <p/>
  * <p>The out-of-the-box use of MultiSelector is to team it up with {@link com.bignerdranch.android.multiselector.SwappingHolder}
  * for easy selection functionality in {@link android.support.v7.widget.RecyclerView}s. Like this:</p>
  * <pre>
@@ -46,6 +46,7 @@ public class MultiSelector extends SelectionManager {
 
     /**
      * <p>Current value of selectable.</p>
+     *
      * @return True if in selection mode.
      */
     public boolean isSelectable() {
@@ -56,6 +57,7 @@ public class MultiSelector extends SelectionManager {
      * <p>Toggle whether this MultiSelector is in selection mode or not.
      * {@link com.bignerdranch.android.multiselector.SelectableHolder#setSelectable(boolean)}
      * will be called on any attached holders as well.</p>
+     *
      * @param isSelectable True if in selection mode.
      */
     public void setSelectable(boolean isSelectable) {
@@ -66,7 +68,7 @@ public class MultiSelector extends SelectionManager {
     /**
      * <p>Calls through to {@link #setSelected(int, long, boolean)}.</p>
      *
-     * @param holder Holder to set selection value for.
+     * @param holder     Holder to set selection value for.
      * @param isSelected Whether the item should be selected.
      */
     public void setSelected(SelectableHolder holder, boolean isSelected) {
@@ -76,13 +78,13 @@ public class MultiSelector extends SelectionManager {
     /**
      * <p>Sets whether a particular item is selected. In this implementation, id is
      * ignored, but subclasses may use id instead.</p>
-     *
+     * <p/>
      * <p>If a holder is bound for this position, this will call through to
      * {@link com.bignerdranch.android.multiselector.SelectableHolder#setActivated(boolean)}
      * for that holder.</p>
      *
-     * @param position Position to select/unselect.
-     * @param id Item id to select/unselect. Ignored in this implementation.
+     * @param position   Position to select/unselect.
+     * @param id         Item id to select/unselect. Ignored in this implementation.
      * @param isSelected Whether the item will be selected.
      */
     public void setSelected(int position, long id, boolean isSelected) {
@@ -94,7 +96,7 @@ public class MultiSelector extends SelectionManager {
      * <p>Returns whether a particular item is selected.</p>
      *
      * @param position The position to test selection for.
-     * @param id Item id to select/unselect. Ignored in this implementation.
+     * @param id       Item id to select/unselect. Ignored in this implementation.
      * @return Whether the item is selected.
      */
     public boolean isSelected(int position, long id) {
@@ -235,7 +237,7 @@ public class MultiSelector extends SelectionManager {
     @Override
     public void restoreSelectionStates(Bundle savedStates) {
         List<Integer> selectedPositions = savedStates.getIntegerArrayList(SELECTION_POSITIONS);
-         restoreSelections(selectedPositions);
+        restoreSelections(selectedPositions);
         mIsSelectable = savedStates.getBoolean(SELECTIONS_STATE);
 
     }
@@ -247,22 +249,19 @@ public class MultiSelector extends SelectionManager {
         for (int i = 0; i < selected.size(); i++) {
             position = selected.get(i);
             mSelections.put(position, true);
-         }
+        }
         refreshAllHolders();
     }
 
 
     /**
      * this is just a simple added functionalty just to toggle selection on all items in the view
+     *
      * @return boolean indicating if the multiselector set to selectAll
      */
     public boolean getShdSelectAll() {
         return mShdSelectAll;
     }
-
-
-
-
 
 
 }
