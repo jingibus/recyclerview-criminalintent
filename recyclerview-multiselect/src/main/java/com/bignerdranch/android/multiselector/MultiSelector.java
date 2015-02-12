@@ -34,7 +34,6 @@ import java.util.List;
  * </pre>
  */
 public class MultiSelector extends SelectionManager {
-    public static final String TAG = "multiselector";
     private static final String SELECTION_POSITIONS = "position";
     private static final String SELECTIONS_STATE = "state";
     private SparseBooleanArray mSelections = new SparseBooleanArray();
@@ -244,11 +243,12 @@ public class MultiSelector extends SelectionManager {
     private void restoreSelections(List<Integer> selected) {
         if (selected == null) return;
         int position;
+        mSelections.clear();
         for (int i = 0; i < selected.size(); i++) {
             position = selected.get(i);
             mSelections.put(position, true);
-            mTracker.bindHolder(mTracker.getHolder(position), position);
-        }
+         }
+        refreshAllHolders();
     }
 
 

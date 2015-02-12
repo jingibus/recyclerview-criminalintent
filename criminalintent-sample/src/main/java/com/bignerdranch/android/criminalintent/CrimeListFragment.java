@@ -72,7 +72,6 @@ public class CrimeListFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         getActivity().setTitle(R.string.crimes_title);
-        //setRetainInstance(true);
         mSubtitleVisible = false;
     }
 
@@ -88,9 +87,9 @@ public class CrimeListFragment extends BaseFragment {
 
         if (mMultiSelector != null) {
             Bundle bundle = savedInstanceState;
-            if (bundle != null)
-                mMultiSelector.restoreSelectionStates(bundle.getBundle(MultiSelector.TAG));
- 
+            if (bundle != null){
+                mMultiSelector.restoreSelectionStates(bundle.getBundle( TAG));
+            }
 
             if (mMultiSelector.isSelectable()) {
                 if (mDeleteMode != null) {
@@ -106,7 +105,7 @@ public class CrimeListFragment extends BaseFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBundle(MultiSelector.TAG, mMultiSelector.saveSelectionStates());
+        outState.putBundle(TAG, mMultiSelector.saveSelectionStates());
         super.onSaveInstanceState(outState);
     }
 
@@ -224,8 +223,6 @@ public class CrimeListFragment extends BaseFragment {
             itemView.setOnClickListener(this);
             itemView.setClickable(true);
             itemView.setOnLongClickListener(this);
-
-
         }
 
         public void bindCrime(Crime crime) {

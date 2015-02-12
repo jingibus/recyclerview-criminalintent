@@ -16,6 +16,7 @@ public interface SelectableHolder{
      */
     void setSelectable(boolean selectable);
 
+
     /**
      * <p>Return true if the item is selected/activated.</p>
      * @return True if selected/activated.
