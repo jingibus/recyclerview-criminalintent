@@ -33,7 +33,7 @@ import java.util.List;
  * }
  * </pre>
  */
-public class MultiSelector extends SelectionManager {
+public class MultiSelector {
     private static final String SELECTION_POSITIONS = "position";
     private static final String SELECTIONS_STATE = "state";
     private SparseBooleanArray mSelections = new SparseBooleanArray();
@@ -207,21 +207,12 @@ public class MultiSelector extends SelectionManager {
         holder.setActivated(isActivated);
     }
 
-    @Override
-    public void selectAll(boolean shdselectAll) {
-        this.mShdSelectAll = shdselectAll;
-        for (SelectableHolder holder : mTracker.getTrackedHolders()) {
-
-            setSelected(holder, shdselectAll);
-        }
-        return;
-    }
 
     /**
      * @return Bundle containing the states of the selection and a flag indicating if the multiselection is in
      * selection mode or not
      */
-    @Override
+
     public Bundle saveSelectionStates() {
         Bundle information = new Bundle();
         information.putIntegerArrayList(SELECTION_POSITIONS, (ArrayList<Integer>) getSelectedPositions());
@@ -234,7 +225,7 @@ public class MultiSelector extends SelectionManager {
      *
      * @param savedStates
      */
-    @Override
+
     public void restoreSelectionStates(Bundle savedStates) {
         List<Integer> selectedPositions = savedStates.getIntegerArrayList(SELECTION_POSITIONS);
         restoreSelections(selectedPositions);

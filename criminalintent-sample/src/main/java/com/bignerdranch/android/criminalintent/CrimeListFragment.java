@@ -28,8 +28,8 @@ import com.bignerdranch.android.multiselector.SwappingHolder;
 
 import java.util.ArrayList;
 
-public class CrimeListFragment extends BaseFragment { 
-    private static final String TAG="crimeListFragment";
+public class CrimeListFragment extends BaseFragment {
+    private static final String TAG = "crimeListFragment";
     private RecyclerView mRecyclerView;
     private MultiSelector mMultiSelector = new MultiSelector();
     private ModalMultiSelectorCallback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
@@ -64,7 +64,7 @@ public class CrimeListFragment extends BaseFragment {
             return false;
         }
     };
-     private ArrayList<Crime> mCrimes;
+    private ArrayList<Crime> mCrimes;
     private boolean mSubtitleVisible;
 
     @Override
@@ -87,14 +87,14 @@ public class CrimeListFragment extends BaseFragment {
 
         if (mMultiSelector != null) {
             Bundle bundle = savedInstanceState;
-            if (bundle != null){
-                mMultiSelector.restoreSelectionStates(bundle.getBundle( TAG));
+            if (bundle != null) {
+                mMultiSelector.restoreSelectionStates(bundle.getBundle(TAG));
             }
 
             if (mMultiSelector.isSelectable()) {
                 if (mDeleteMode != null) {
                     mDeleteMode.setClearOnPrepare(false);
-                    mMultiSelector.startSupportSelectionWithActionMode((ActionBarActivity) getActivity(), mDeleteMode);
+                    ((ActionBarActivity) getActivity()).startSupportActionMode(mDeleteMode);
                 }
 
             }
@@ -187,21 +187,21 @@ public class CrimeListFragment extends BaseFragment {
                 return true;
             case R.id.menu_item_show_subtitle:
                 ActionBar actionBar = getActionBar();
-            	if (actionBar.getSubtitle() == null) {
+                if (actionBar.getSubtitle() == null) {
                     actionBar.setSubtitle(R.string.subtitle);
                     mSubtitleVisible = true;
                     item.setTitle(R.string.hide_subtitle);
-            	}  else {
-            		actionBar.setSubtitle(null);
-            		 mSubtitleVisible = false;
-            		item.setTitle(R.string.show_subtitle);
-            	}
+                } else {
+                    actionBar.setSubtitle(null);
+                    mSubtitleVisible = false;
+                    item.setTitle(R.string.show_subtitle);
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        } 
+        }
     }
-    
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, menu);
@@ -221,7 +221,7 @@ public class CrimeListFragment extends BaseFragment {
             mDateTextView = (TextView) itemView.findViewById(R.id.crime_list_item_dateTextView);
             mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.crime_list_item_solvedCheckBox);
             itemView.setOnClickListener(this);
-            itemView.setClickable(true);
+            itemView.setLongClickable(true);
             itemView.setOnLongClickListener(this);
         }
 
@@ -248,8 +248,8 @@ public class CrimeListFragment extends BaseFragment {
         @Override
         public boolean onLongClick(View v) {
 
-            mMultiSelector.startSupportSelectionWithActionMode((ActionBarActivity) getActivity(), mDeleteMode);
-            mMultiSelector.setSelected(this,true);
+            ((ActionBarActivity) getActivity()).startSupportActionMode(mDeleteMode);
+            mMultiSelector.setSelected(this, true);
             return true;
         }
 
@@ -269,7 +269,7 @@ public class CrimeListFragment extends BaseFragment {
         public void onBindViewHolder(CrimeHolder holder, int pos) {
             Crime crime = mCrimes.get(pos);
             holder.bindCrime(crime);
-            Log.d(TAG,"binding crime"+crime+"at position"+pos);
+            Log.d(TAG, "binding crime" + crime + "at position" + pos);
         }
 
         @Override

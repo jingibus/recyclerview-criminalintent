@@ -1,10 +1,10 @@
 package com.bignerdranch.android.criminalintent;
 
-import java.util.Date;
-import java.util.UUID;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Date;
+import java.util.UUID;
 
 public class Crime {
 
@@ -14,14 +14,14 @@ public class Crime {
     private static final String JSON_SOLVED = "solved";
     private static final String JSON_PHOTO = "photo";
     private static final String JSON_SUSPECT = "suspect";
-    
+
     private UUID mId;
     private String mTitle;
     private Date mDate;
     private boolean mSolved;
     private Photo mPhoto;
     private String mSuspect;
-    
+
     public Crime() {
         mId = UUID.randomUUID();
         mDate = new Date();
@@ -82,7 +82,7 @@ public class Crime {
     public void setDate(Date date) {
         mDate = date;
     }
-    
+
     public Photo getPhoto() {
         return mPhoto;
     }

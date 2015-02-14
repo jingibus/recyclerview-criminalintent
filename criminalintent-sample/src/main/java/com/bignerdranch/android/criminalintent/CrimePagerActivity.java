@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -36,7 +35,6 @@ public class CrimePagerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
 
-
         mViewPager = new ViewPager(this);
         mViewPager.setId(R.id.viewPager);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -52,19 +50,20 @@ public class CrimePagerActivity extends ActionBarActivity {
             public int getCount() {
                 return crimes.size();
             }
+
             @Override
             public Fragment getItem(int pos) {
-                UUID crimeId =  crimes.get(pos).getId();
+                UUID crimeId = crimes.get(pos).getId();
                 return CrimeFragment.newInstance(crimeId);
             }
-        }); 
+        });
 
-        UUID crimeId = (UUID)getIntent().getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID);
+        UUID crimeId = (UUID) getIntent().getSerializableExtra(CrimeFragment.EXTRA_CRIME_ID);
         for (int i = 0; i < crimes.size(); i++) {
             if (crimes.get(i).getId().equals(crimeId)) {
                 mViewPager.setCurrentItem(i);
                 break;
-            } 
+            }
         }
     }
 }
