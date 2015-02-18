@@ -9,7 +9,7 @@ def isSnapshot = version.endsWith('-SNAPSHOT')
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "21.0.2"
 
     defaultConfig {
         minSdkVersion 11
@@ -35,6 +35,48 @@ android {
         sign configurations.archives
     }
 
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment ->
+                signing.signPom(deployment)
+            }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                packaging 'aar'
+                name 'RecyclerView MultiSelect'
+                description 'An Android library that handles displaying and managing selections in RecyclerView.'
+
+                url 'https://bignerdranch.github.io/recyclerview-multiselect/'
+
+                scm {
+                    url 'https://github.com/bignerdranch/recyclerview-multiselect'
+                    connection 'scm:git:https://github.com/bignerdranch/recyclerview-multiselect.git'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT License'
+                        url 'http://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'jingibus'
+                        name 'Bill Phillips'
+                        email 'phillips@bignerdranch.com'
+                    }
+                }
+            }
+        }
+    }
+}
 
 android.libraryVariants.all { variant ->
     task("generate${variant.name.substring(0,1).toUpperCase() + variant.name.substring(1)}Javadoc", type: Javadoc) {
