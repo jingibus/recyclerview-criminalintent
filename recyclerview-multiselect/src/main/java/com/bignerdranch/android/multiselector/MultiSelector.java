@@ -39,7 +39,6 @@ public class MultiSelector {
     private SparseBooleanArray mSelections = new SparseBooleanArray();
     private WeakHolderTracker mTracker = new WeakHolderTracker();
     private boolean mIsSelectable;
-    private boolean mShdSelectAll;
 
     public MultiSelector() {
     }
@@ -143,8 +142,7 @@ public class MultiSelector {
      */
     public void bindHolder(SelectableHolder holder, int position, long id) {
         mTracker.bindHolder(holder, position);
-        if (getShdSelectAll()) setSelected(holder, true);
-        refreshHolder(holder);
+         refreshHolder(holder);
     }
 
     /**
@@ -242,16 +240,6 @@ public class MultiSelector {
             mSelections.put(position, true);
         }
         refreshAllHolders();
-    }
-
-
-    /**
-     * this is just a simple added functionalty just to toggle selection on all items in the view
-     *
-     * @return boolean indicating if the multiselector set to selectAll
-     */
-    public boolean getShdSelectAll() {
-        return mShdSelectAll;
     }
 
 
