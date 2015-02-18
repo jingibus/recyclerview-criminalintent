@@ -42,8 +42,7 @@ public class CrimeListFragment extends BaseFragment {
 
         @Override
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.menu_item_delete_crime:
+            if (menuItem.getItemId()==  R.id.menu_item_delete_crime){
                     // Need to finish the action mode before doing the following,
                     // not after. No idea why, but it crashes.
                     actionMode.finish();
@@ -58,8 +57,7 @@ public class CrimeListFragment extends BaseFragment {
 
                     mMultiSelector.clearSelections();
                     return true;
-                default:
-                    break;
+
             }
             return false;
         }
@@ -166,17 +164,16 @@ public class CrimeListFragment extends BaseFragment {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_new_crime:
-                final Crime crime = new Crime();
-                CrimeLab.get(getActivity()).addCrime(crime);
+        if (item.getItemId()==  R.id.menu_item_new_crime) {
+            final Crime crime = new Crime();
+            CrimeLab.get(getActivity()).addCrime(crime);
 
-                mRecyclerView.getAdapter().notifyItemInserted(mCrimes.indexOf(crime));
+            mRecyclerView.getAdapter().notifyItemInserted(mCrimes.indexOf(crime));
 
-                // NOTE: Left this code in for commentary. I believe this is what you would do
-                // to wait until the new crime is added, then animate the selection of the new crime.
-                // It does not work, though: the listener will be called immediately,
-                // because no animations have been queued yet.
+            // NOTE: Left this code in for commentary. I believe this is what you would do
+            // to wait until the new crime is added, then animate the selection of the new crime.
+            // It does not work, though: the listener will be called immediately,
+            // because no animations have been queued yet.
 //                mRecyclerView.getItemAnimator().isRunning(
 //                        new RecyclerView.ItemAnimator.ItemAnimatorFinishedListener() {
 //                    @Override
@@ -184,8 +181,9 @@ public class CrimeListFragment extends BaseFragment {
 //                        selectCrime(crime);
 //                    }
 //                });
-                return true;
-            case R.id.menu_item_show_subtitle:
+            return true;
+        }
+          else if(item.getItemId()==R.id.menu_item_show_subtitle) {
                 ActionBar actionBar = getActionBar();
                 if (actionBar.getSubtitle() == null) {
                     actionBar.setSubtitle(R.string.subtitle);
@@ -197,9 +195,10 @@ public class CrimeListFragment extends BaseFragment {
                     item.setTitle(R.string.show_subtitle);
                 }
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
+
+
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
