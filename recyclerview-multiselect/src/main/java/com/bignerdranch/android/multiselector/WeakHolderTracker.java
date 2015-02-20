@@ -8,11 +8,12 @@ import java.util.List;
 
 class WeakHolderTracker {
     private SparseArray<WeakReference<SelectableHolder>> mHoldersByPosition =
-            new SparseArray<WeakReference<SelectableHolder>>();
+            new SparseArray<>();
 
     /**
      * Returns the holder with a given position. If non-null, the returned
      * holder is guaranteed to have getPosition() == position.
+     *
      * @param position
      * @return
      */
@@ -32,7 +33,7 @@ class WeakHolderTracker {
     }
 
     public void bindHolder(SelectableHolder holder, int position) {
-        mHoldersByPosition.put(position, new WeakReference<SelectableHolder>(holder));
+        mHoldersByPosition.put(position, new WeakReference<>(holder));
     }
 
     public List<SelectableHolder> getTrackedHolders() {
@@ -49,4 +50,6 @@ class WeakHolderTracker {
 
         return holders;
     }
+
+
 }

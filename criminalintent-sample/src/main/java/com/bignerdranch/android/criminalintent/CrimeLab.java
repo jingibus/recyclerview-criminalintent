@@ -1,11 +1,10 @@
 package com.bignerdranch.android.criminalintent;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.UUID;
-
-import android.content.Context;
-
-import android.util.Log;
 
 public class CrimeLab {
     private static final String TAG = "CrimeLab";
@@ -43,7 +42,7 @@ public class CrimeLab {
         }
         return null;
     }
-    
+
     public void addCrime(Crime c) {
         mCrimes.add(c);
         saveCrimes();

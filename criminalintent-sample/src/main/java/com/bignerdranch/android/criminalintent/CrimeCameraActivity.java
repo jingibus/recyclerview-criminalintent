@@ -2,8 +2,6 @@ package com.bignerdranch.android.criminalintent;
 
 import android.app.Fragment;
 import android.os.Bundle;
-
-
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -16,7 +14,7 @@ public class CrimeCameraActivity extends SingleFragmentActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
     }
-    
+
     @Override
     protected Fragment createFragment() {
         return new CrimeCameraFragment();

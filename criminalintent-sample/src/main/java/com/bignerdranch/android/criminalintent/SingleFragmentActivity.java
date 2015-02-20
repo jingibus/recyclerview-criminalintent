@@ -2,11 +2,8 @@ package com.bignerdranch.android.criminalintent;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.transition.Explode;
-import android.view.Window;
 
 public abstract class SingleFragmentActivity extends ActionBarActivity {
     protected abstract Fragment createFragment();
@@ -21,8 +18,8 @@ public abstract class SingleFragmentActivity extends ActionBarActivity {
         if (fragment == null) {
             fragment = createFragment();
             manager.beginTransaction()
-                .add(R.id.fragmentContainer, fragment)
-                .commit();
+                    .add(R.id.fragmentContainer, fragment)
+                    .commit();
         }
     }
 }

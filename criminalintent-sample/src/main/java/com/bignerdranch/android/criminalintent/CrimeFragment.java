@@ -58,8 +58,8 @@ public class CrimeFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        UUID crimeId = (UUID)getArguments().getSerializable(EXTRA_CRIME_ID);
+
+        UUID crimeId = (UUID) getArguments().getSerializable(EXTRA_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
 
         setHasOptionsMenu(true);
@@ -73,10 +73,10 @@ public class CrimeFragment extends BaseFragment {
     @TargetApi(11)
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime, parent, false);
-  
+
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mTitleField = (EditText)v.findViewById(R.id.crime_title);
+        mTitleField = (EditText) v.findViewById(R.id.crime_title);
         mTitleField.setText(mCrime.getTitle());
         mTitleField.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence c, int start, int before, int count) {
@@ -91,8 +91,8 @@ public class CrimeFragment extends BaseFragment {
                 // this one too
             }
         });
-        
-        mSolvedCheckBox = (CheckBox)v.findViewById(R.id.crime_solved);
+
+        mSolvedCheckBox = (CheckBox) v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
         mSolvedCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -100,21 +100,20 @@ public class CrimeFragment extends BaseFragment {
                 mCrime.setSolved(isChecked);
             }
         });
-
-        mDateButton = (Button)v.findViewById(R.id.crime_date);
+        mDateButton = (Button) v.findViewById(R.id.crime_date);
         updateDate();
         mDateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 FragmentManager fm = getActivity()
                         .getFragmentManager();
                 DatePickerFragment dialog = DatePickerFragment
-                    .newInstance(mCrime.getDate());
+                        .newInstance(mCrime.getDate());
                 dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
                 dialog.show(fm, DIALOG_DATE);
             }
         });
-        
-        mPhotoButton = (ImageButton)v.findViewById(R.id.crime_imageButton);
+
+        mPhotoButton = (ImageButton) v.findViewById(R.id.crime_imageButton);
         mPhotoButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // launch the camera activity
@@ -122,7 +121,7 @@ public class CrimeFragment extends BaseFragment {
                 startActivityForResult(i, REQUEST_PHOTO);
             }
         });
-        
+
         // if camera is not available, disable camera functionality
         PackageManager pm = getActivity().getPackageManager();
         if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) &&
@@ -130,23 +129,23 @@ public class CrimeFragment extends BaseFragment {
             mPhotoButton.setEnabled(false);
         }
 
-        mPhotoView = (ImageView)v.findViewById(R.id.crime_imageView);
+        mPhotoView = (ImageView) v.findViewById(R.id.crime_imageView);
         mPhotoView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Photo p = mCrime.getPhoto();
-                if (p == null) 
+                if (p == null)
                     return;
 
                 FragmentManager fm = getActivity()
-                    .getFragmentManager();
+                        .getFragmentManager();
                 String path = getActivity()
-                    .getFileStreamPath(p.getFilename()).getAbsolutePath();
+                        .getFileStreamPath(p.getFilename()).getAbsolutePath();
                 ImageFragment.createInstance(path)
-                    .show(fm, DIALOG_IMAGE);
+                        .show(fm, DIALOG_IMAGE);
             }
         });
-        
-        mSuspectButton = (Button)v.findViewById(R.id.crime_suspectButton);
+
+        mSuspectButton = (Button) v.findViewById(R.id.crime_suspectButton);
         mSuspectButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
@@ -157,7 +156,7 @@ public class CrimeFragment extends BaseFragment {
             mSuspectButton.setText(mCrime.getSuspect());
         }
 
-        Button reportButton = (Button)v.findViewById(R.id.crime_reportButton);
+        Button reportButton = (Button) v.findViewById(R.id.crime_reportButton);
         reportButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(Intent.ACTION_SEND);
@@ -166,19 +165,19 @@ public class CrimeFragment extends BaseFragment {
                 i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
                 i = Intent.createChooser(i, getString(R.string.send_report));
                 startActivity(i);
-            } 
+            }
         });
-        
-        return v; 
+
+        return v;
     }
-    
+
     private void showPhoto() {
         // (re)set the image button's image based on our photo
         Photo p = mCrime.getPhoto();
         BitmapDrawable b = null;
         if (p != null) {
             String path = getActivity()
-                .getFileStreamPath(p.getFilename()).getAbsolutePath();
+                    .getFileStreamPath(p.getFilename()).getAbsolutePath();
             b = PictureUtils.getScaledDrawable(getActivity(), path);
         }
         mPhotoView.setImageDrawable(b);
@@ -195,18 +194,18 @@ public class CrimeFragment extends BaseFragment {
         super.onStart();
         showPhoto();
     }
-    
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != Activity.RESULT_OK) return;
         if (requestCode == REQUEST_DATE) {
-            Date date = (Date)data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
+            Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
             updateDate();
         } else if (requestCode == REQUEST_PHOTO) {
             // create a new Photo object and attach it to the crime
             String filename = data
-                .getStringExtra(CrimeCameraFragment.EXTRA_PHOTO_FILENAME);
+                    .getStringExtra(CrimeCameraFragment.EXTRA_PHOTO_FILENAME);
             if (filename != null) {
                 Photo p = new Photo(filename);
                 mCrime.setPhoto(p);
@@ -214,13 +213,13 @@ public class CrimeFragment extends BaseFragment {
             }
         } else if (requestCode == REQUEST_CONTACT) {
             Uri contactUri = data.getData();
-            String[] queryFields = new String[] { ContactsContract.Contacts.DISPLAY_NAME_PRIMARY };
+            String[] queryFields = new String[]{ContactsContract.Contacts.DISPLAY_NAME_PRIMARY};
             Cursor c = getActivity().getContentResolver()
-                .query(contactUri, queryFields, null, null, null);
+                    .query(contactUri, queryFields, null, null, null);
 
             if (c.getCount() == 0) {
                 c.close();
-                return; 
+                return;
             }
 
             c.moveToFirst();
@@ -230,7 +229,7 @@ public class CrimeFragment extends BaseFragment {
             c.close();
         }
     }
-    
+
     private String getCrimeReport() {
         String solvedString = null;
         if (mCrime.isSolved()) {
@@ -268,6 +267,6 @@ public class CrimeFragment extends BaseFragment {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        } 
+        }
     }
 }

@@ -10,4 +10,5 @@ public class BaseFragment extends Fragment {
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 
+
 }

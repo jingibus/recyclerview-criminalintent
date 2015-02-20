@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -18,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
@@ -28,21 +29,82 @@ import com.bignerdranch.android.multiselector.SwappingHolder;
 import java.util.ArrayList;
 
 public class CrimeListFragment extends BaseFragment {
-
+    private static final String TAG = "crimeListFragment";
     private RecyclerView mRecyclerView;
-
     private MultiSelector mMultiSelector = new MultiSelector();
+    private ModalMultiSelectorCallback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
 
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            if (menuItem.getItemId()==  R.id.menu_item_delete_crime){
+                    // Need to finish the action mode before doing the following,
+                    // not after. No idea why, but it crashes.
+                    actionMode.finish();
+
+                    for (int i = mCrimes.size(); i >= 0; i--) {
+                        if (mMultiSelector.isSelected(i, 0)) {
+                            Crime crime = mCrimes.get(i);
+                            CrimeLab.get(getActivity()).deleteCrime(crime);
+                            mRecyclerView.getAdapter().notifyItemRemoved(i);
+                        }
+                    }
+
+                    mMultiSelector.clearSelections();
+                    return true;
+
+            }
+            return false;
+        }
+    };
     private ArrayList<Crime> mCrimes;
     private boolean mSubtitleVisible;
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         getActivity().setTitle(R.string.crimes_title);
-        setRetainInstance(true);
         mSubtitleVisible = false;
+    }
+
+    /**
+     * Note: since the fragment is retained. the bundle passed in after state is restored is null.
+     * THe only way to pass parcelable objects is through the activities onsavedInstanceState and appropiate startup lifecycle
+     * However after having second thoughts, since the fragment is retained then all the states and instance variables are
+     * retained as well. no need to make the selection states percelable therefore just check for the selectionstate
+     * from the multiselector
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+
+        if (mMultiSelector != null) {
+            Bundle bundle = savedInstanceState;
+            if (bundle != null) {
+                mMultiSelector.restoreSelectionStates(bundle.getBundle(TAG));
+            }
+
+            if (mMultiSelector.isSelectable()) {
+                if (mDeleteMode != null) {
+                    mDeleteMode.setClearOnPrepare(false);
+                    ((ActionBarActivity) getActivity()).startSupportActionMode(mDeleteMode);
+                }
+
+            }
+        }
+
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBundle(TAG, mMultiSelector.saveSelectionStates());
+        super.onSaveInstanceState(outState);
     }
 
     @TargetApi(11)
@@ -59,7 +121,6 @@ public class CrimeListFragment extends BaseFragment {
         mCrimes = CrimeLab.get(getActivity()).getCrimes();
         mRecyclerView.setAdapter(new CrimeAdapter());
 
-
         return v;
     }
 
@@ -75,7 +136,7 @@ public class CrimeListFragment extends BaseFragment {
             // project had to be shifted over to use stdlib fragments,
             // and the v13 ViewPager.
             int index = mCrimes.indexOf(c);
-            CrimeHolder holder = (CrimeHolder)mRecyclerView
+            CrimeHolder holder = (CrimeHolder) mRecyclerView
                     .findViewHolderForPosition(index);
 
             ActivityOptions options = CrimePagerActivity.getTransition(
@@ -102,51 +163,17 @@ public class CrimeListFragment extends BaseFragment {
         }
     }
 
-    private ActionMode.Callback mDeleteMode = new ModalMultiSelectorCallback(mMultiSelector) {
-
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.menu_item_delete_crime:
-                    // Need to finish the action mode before doing the following,
-                    // not after. No idea why, but it crashes.
-                    actionMode.finish();
-
-                    for (int i = mCrimes.size(); i > 0; i--) {
-                        if (mMultiSelector.isSelected(i, 0)) {
-                            Crime crime = mCrimes.get(i);
-                            CrimeLab.get(getActivity()).deleteCrime(crime);
-                            mRecyclerView.getAdapter().notifyItemRemoved(i);
-                        }
-                    }
-
-                    mMultiSelector.clearSelections();
-                    return true;
-                default:
-                    break;
-            }
-            return false;
-        }
-    };
-
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_new_crime:
-                final Crime crime = new Crime();
-                CrimeLab.get(getActivity()).addCrime(crime);
+        if (item.getItemId()==  R.id.menu_item_new_crime) {
+            final Crime crime = new Crime();
+            CrimeLab.get(getActivity()).addCrime(crime);
 
-                mRecyclerView.getAdapter().notifyItemInserted(mCrimes.indexOf(crime));
+            mRecyclerView.getAdapter().notifyItemInserted(mCrimes.indexOf(crime));
 
-                // NOTE: Left this code in for commentary. I believe this is what you would do
-                // to wait until the new crime is added, then animate the selection of the new crime.
-                // It does not work, though: the listener will be called immediately,
-                // because no animations have been queued yet.
+            // NOTE: Left this code in for commentary. I believe this is what you would do
+            // to wait until the new crime is added, then animate the selection of the new crime.
+            // It does not work, though: the listener will be called immediately,
+            // because no animations have been queued yet.
 //                mRecyclerView.getItemAnimator().isRunning(
 //                        new RecyclerView.ItemAnimator.ItemAnimatorFinishedListener() {
 //                    @Override
@@ -154,32 +181,33 @@ public class CrimeListFragment extends BaseFragment {
 //                        selectCrime(crime);
 //                    }
 //                });
-                return true;
-            case R.id.menu_item_show_subtitle:
+            return true;
+        }
+          else if(item.getItemId()==R.id.menu_item_show_subtitle) {
                 ActionBar actionBar = getActionBar();
-            	if (actionBar.getSubtitle() == null) {
+                if (actionBar.getSubtitle() == null) {
                     actionBar.setSubtitle(R.string.subtitle);
                     mSubtitleVisible = true;
                     item.setTitle(R.string.hide_subtitle);
-            	}  else {
-            		actionBar.setSubtitle(null);
-            		 mSubtitleVisible = false;
-            		item.setTitle(R.string.show_subtitle);
-            	}
+                } else {
+                    actionBar.setSubtitle(null);
+                    mSubtitleVisible = false;
+                    item.setTitle(R.string.show_subtitle);
+                }
                 return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        } 
+
+
+        }
+        return super.onOptionsItemSelected(item);
     }
-    
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
         getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, menu);
     }
 
 
-    private class CrimeHolder extends SwappingHolder
-            implements View.OnClickListener, View.OnLongClickListener {
+    private class CrimeHolder extends SwappingHolder implements View.OnClickListener, View.OnLongClickListener {
         private final TextView mTitleTextView;
         private final TextView mDateTextView;
         private final CheckBox mSolvedCheckBox;
@@ -192,8 +220,8 @@ public class CrimeListFragment extends BaseFragment {
             mDateTextView = (TextView) itemView.findViewById(R.id.crime_list_item_dateTextView);
             mSolvedCheckBox = (CheckBox) itemView.findViewById(R.id.crime_list_item_solvedCheckBox);
             itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
             itemView.setLongClickable(true);
+            itemView.setOnLongClickListener(this);
         }
 
         public void bindCrime(Crime crime) {
@@ -205,22 +233,28 @@ public class CrimeListFragment extends BaseFragment {
 
         @Override
         public void onClick(View v) {
+
             if (mCrime == null) {
                 return;
             }
             if (!mMultiSelector.tapSelection(this)) {
                 selectCrime(mCrime);
             }
+
         }
+
 
         @Override
         public boolean onLongClick(View v) {
-            ActionBarActivity activity = (ActionBarActivity)getActivity();
-            activity.startSupportActionMode(mDeleteMode);
+
+            ((ActionBarActivity) getActivity()).startSupportActionMode(mDeleteMode);
             mMultiSelector.setSelected(this, true);
             return true;
         }
+
+
     }
+
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
         @Override
@@ -234,6 +268,7 @@ public class CrimeListFragment extends BaseFragment {
         public void onBindViewHolder(CrimeHolder holder, int pos) {
             Crime crime = mCrimes.get(pos);
             holder.bindCrime(crime);
+            Log.d(TAG, "binding crime" + crime + "at position" + pos);
         }
 
         @Override
