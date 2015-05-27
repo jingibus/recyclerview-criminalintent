@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'com.github.dcendents.android-maven'
 
 version '0.1'
 group 'com.bignerdranch.android'
@@ -24,8 +25,6 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 21
-        versionCode 1
-        versionName project.version.toString()
     }
     buildTypes {
         release {
