@@ -71,7 +71,7 @@ public class MultiSelector {
      * @param isSelected Whether the item should be selected.
      */
     public void setSelected(SelectableHolder holder, boolean isSelected) {
-        setSelected(holder.getPosition(), holder.getItemId(), isSelected);
+        setSelected(holder.getAdapterPosition(), holder.getItemId(), isSelected);
     }
 
     /**
@@ -152,7 +152,7 @@ public class MultiSelector {
      * @return True if {@link #isSelectable()} and selection was toggled for this item.
      */
     public boolean tapSelection(SelectableHolder holder) {
-        return tapSelection(holder.getPosition(), holder.getItemId());
+        return tapSelection(holder.getAdapterPosition(), holder.getItemId());
     }
 
     /**
@@ -201,7 +201,7 @@ public class MultiSelector {
         }
         holder.setSelectable(mIsSelectable);
 
-        boolean isActivated = mSelections.get(holder.getPosition());
+        boolean isActivated = mSelections.get(holder.getAdapterPosition());
         holder.setActivated(isActivated);
     }
 

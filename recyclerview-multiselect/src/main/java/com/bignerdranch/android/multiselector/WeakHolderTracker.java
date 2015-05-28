@@ -24,7 +24,7 @@ class WeakHolderTracker {
         }
 
         SelectableHolder holder = holderRef.get();
-        if (holder == null || holder.getPosition() != position) {
+        if (holder == null || holder.getAdapterPosition() != position) {
             mHoldersByPosition.remove(position);
             return null;
         }
