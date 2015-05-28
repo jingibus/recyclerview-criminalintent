@@ -82,7 +82,8 @@ To get the same effect as CHOICE\_MODE\_MULTIPLE\_MODAL, you can either write yo
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, menu);
+            super.onCreateActionMode(actionMode, Menu menu);
+	     getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, menu);
             return true;
         }
 

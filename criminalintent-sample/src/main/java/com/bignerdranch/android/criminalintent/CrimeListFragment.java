@@ -36,6 +36,7 @@ public class CrimeListFragment extends BaseFragment {
 
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            super.onCreateActionMode(actionMode, menu);
             getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, menu);
             return true;
         }
