@@ -161,7 +161,7 @@ If that's still too restrictive, you can implement the SelectableHolder interfac
         void setActivated(boolean activated);
         boolean isActivated();
 
-        int getPosition();
+        int getAdapterPosition();
         long getItemId();
     }
 
