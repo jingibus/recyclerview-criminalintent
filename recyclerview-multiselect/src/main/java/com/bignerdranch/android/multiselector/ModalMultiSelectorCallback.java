@@ -60,6 +60,11 @@ public abstract class ModalMultiSelectorCallback implements ActionMode.Callback 
 
     @Override
     public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
         if (mClearOnPrepare) {
             mMultiSelector.clearSelections();
         }
