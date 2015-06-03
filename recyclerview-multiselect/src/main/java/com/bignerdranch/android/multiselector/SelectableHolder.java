@@ -40,7 +40,7 @@ public interface SelectableHolder {
      *
      * @return Position this holder is currently bound to.
      */
-    int getPosition();
+    int getAdapterPosition();
 
     /**
      * <p>Return the item id this item is currently bound to.
