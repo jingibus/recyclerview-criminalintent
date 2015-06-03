@@ -115,7 +115,7 @@ ModalMultiSelectorCallback will call MultiSelector.setSelectable(true) and clear
 
         @Override
         public boolean onLongClick(View v) {
-            ActionBarActivity activity = (ActionBarActivity)getActivity();
+            AppCompatActivity activity = (AppCompatActivity)getActivity();
             activity.startSupportActionMode(mDeleteMode);
             mMultiSelector.setSelected(this, true);
             return true;

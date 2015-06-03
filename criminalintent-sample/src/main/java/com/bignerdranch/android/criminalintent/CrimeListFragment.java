@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
@@ -94,7 +93,7 @@ public class CrimeListFragment extends BaseFragment {
             if (mMultiSelector.isSelectable()) {
                 if (mDeleteMode != null) {
                     mDeleteMode.setClearOnPrepare(false);
-                    ((ActionBarActivity) getActivity()).startSupportActionMode(mDeleteMode);
+                    ((AppCompatActivity) getActivity()).startSupportActionMode(mDeleteMode);
                 }
 
             }
