@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * <p>A class that handles selection logic and dispatches updates to
  * connected instances of {@link com.bignerdranch.android.multiselector.SelectableHolder}.</p>
- * <p/>
  * <p>The out-of-the-box use of MultiSelector is to team it up with {@link com.bignerdranch.android.multiselector.SwappingHolder}
  * for easy selection functionality in {@link android.support.v7.widget.RecyclerView}s. Like this:</p>
  * <pre>
@@ -77,7 +76,6 @@ public class MultiSelector {
     /**
      * <p>Sets whether a particular item is selected. In this implementation, id is
      * ignored, but subclasses may use id instead.</p>
-     * <p/>
      * <p>If a holder is bound for this position, this will call through to
      * {@link com.bignerdranch.android.multiselector.SelectableHolder#setActivated(boolean)}
      * for that holder.</p>
@@ -130,7 +128,6 @@ public class MultiSelector {
 
     /**
      * <p>Bind a holder to a specific position/id. This implementation ignores the id.</p>
-     * <p/>
      * <p>Bound holders will receive calls to {@link com.bignerdranch.android.multiselector.SelectableHolder#setSelectable(boolean)}
      * and {@link com.bignerdranch.android.multiselector.SelectableHolder#setActivated(boolean)} when
      * {@link #setSelectable(boolean)} is called, or when {@link #setSelected(int, long, boolean)} is called for the
@@ -160,7 +157,6 @@ public class MultiSelector {
      * If {@link #isSelectable()} is true, this method toggles selection
      * for the specified item and returns true. Otherwise, it returns false
      * and does nothing.</p>
-     * <p/>
      * <p>Equivalent to:</p>
      * <pre>
      * {@code
@@ -221,7 +217,7 @@ public class MultiSelector {
     /**
      * restore the selection states of the multiselector and the ViewHolder Trackers
      *
-     * @param savedStates
+     * @param savedStates Saved state bundle, probably from a fragment or activity.
      */
 
     public void restoreSelectionStates(Bundle savedStates) {

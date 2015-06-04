@@ -16,21 +16,17 @@ import android.view.View;
  * <p>
  * A holder extended to support having a selectable mode with a different
  * background and state list animator.</p>
- * <p/>
  * <p>When {@link #setSelectable(boolean)} is set to true, itemView's
  * background is set to the value of selectionModeBackgroundDrawable,
  * and its StateListAnimator is set to selectionModeStateListAnimator.
  * When it is set to false, the defaultModeBackgroundDrawable and
  * defaultModeStateListAnimator are used.</p>
- * <p/>
  * <p>defaultModeBackgroundDrawable and defaultModeStateListAnimator
  * default to the values on itemView at the time the holder was constructed.</p>
- * <p/>
  * <p>selectionModeBackgroundDrawable defaults to a StateListDrawable that displays
  * your colorAccent theme color when state_activated=true, and nothing otherwise.
  * selectionModeStateListAnimator defaults to a raise animation that animates selection
  * items to a 12dp translationZ.</p>
- * <p/>
  * <p>(Thanks to <a href="https://github.com/kurtisnelson/">Kurt Nelson</a> for examples and discussion on approaches here.)</p>
  */
 public  class SwappingHolder extends MultiSelectorBindingHolder implements SelectableHolder {
@@ -43,10 +39,8 @@ public  class SwappingHolder extends MultiSelectorBindingHolder implements Selec
 
     /**
      * <p>Construct a new SelectableHolder hooked up to be controlled by a MultiSelector.</p>
-     * <p/>
      * <p>If the MultiSelector is not null, the SelectableHolder can be selected by
      * calling {@link com.bignerdranch.android.multiselector.MultiSelector#setSelected(com.bignerdranch.android.multiselector.SelectableHolder, boolean)}.</p>
-     * <p/>
      * <p>If the MultiSelector is null, the SelectableHolder acts as a standalone
      * ViewHolder that you can control manually by setting {@link #setSelectable(boolean)}
      * and {@link #setActivated(boolean)}</p>
@@ -72,7 +66,6 @@ public  class SwappingHolder extends MultiSelectorBindingHolder implements Selec
 
     /**
      * <p>Construct a new standalone SelectableHolder.</p>
-     * <p/>
      * <p>Selectable state can be controlled manually by setting {@link #setSelectable(boolean)}.</p>
      *
      * @param itemView Item view for this ViewHolder
@@ -222,7 +215,6 @@ public  class SwappingHolder extends MultiSelectorBindingHolder implements Selec
 
     /**
      * Whether this holder is currently activated/selected.
-     * <p/>
      * Calls through to {@link View#setActivated(boolean)} on {@link #itemView}.
      *
      * @return True if the view is activated.
@@ -233,7 +225,6 @@ public  class SwappingHolder extends MultiSelectorBindingHolder implements Selec
 
     /**
      * Activate/select this holder.
-     * <p/>
      * Calls through to {@link android.view.View#isActivated()} on {@link #itemView}.
      *
      * @param isActivated True to activate the view.
