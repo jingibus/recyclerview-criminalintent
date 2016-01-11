@@ -7,7 +7,7 @@ To import, add the following line to your build.gradle:
 
     compile 'com.bignerdranch.android:recyclerview-multiselect:+'
 
-You can find Javadocs [here](javadocs/).
+You can find Javadocs [here](http://bignerdranch.github.io/recyclerview-multiselect/javadocs/).
 
 ## Basics
 
